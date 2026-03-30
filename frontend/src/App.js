@@ -16,6 +16,8 @@ import TarotReader from "./components/TarotReader";
 import PowerMeter from "./components/PowerMeter";
 import PaymentModal from "./components/PaymentModal";
 import AccuracyLab from "./components/AccuracyLab";
+import MarketSiege from "./components/MarketSiege";
+import OraclesTrial from "./components/OraclesTrial";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -63,6 +65,8 @@ const App = () => {
           <Route path="/tarot" element={<TarotReader />} />
           <Route path="/power-meter" element={<PowerMeter />} />
           <Route path="/accuracy-lab" element={<AccuracyLab />} />
+          <Route path="/market-siege" element={<MarketSiege />} />
+          <Route path="/oracles-trial" element={<OraclesTrial />} />
         </Routes>
       </BrowserRouter>
 
@@ -183,41 +187,51 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               icon={<Moon className="w-12 h-12 text-[#D4AF37]" />}
               title="Vedic Zenith"
               description="D1-D60 divisional charts with Vimshottari Dasha and Ashtakavarga precision"
+              link="/vedic"
             />
             <FeatureCard
               icon={<Sun className="w-12 h-12 text-[#D4AF37]" />}
               title="Western Zenith"
               description="Tropical/Topocentric positioning with Placidus house system accuracy"
+              link="/western"
             />
             <FeatureCard
               icon={<Zap className="w-12 h-12 text-[#D4AF37]" />}
               title="Power Meter"
               description="0-100% dominance gauge calculated from real-time transits"
+              link="/dashboard"
             />
             <FeatureCard
               icon={<TrendingUp className="w-12 h-12 text-[#D4AF37]" />}
-              title="Alpha Strategy"
-              description="78+44 Tarot deck with Mersenne Twister randomization"
+              title="Market Siege"
+              description="60-second numerology battle - test your name vibrations for glory"
+              link="/market-siege"
+              isGame={true}
+            />
+            <FeatureCard
+              icon={<Sparkles className="w-12 h-12 text-[#D4AF37]" />}
+              title="Oracle's Trial"
+              description="High-stakes tarot intuition quiz - earn Gold Dust rewards"
+              link="/oracles-trial"
+              isGame={true}
             />
             <FeatureCard
               icon={<Users className="w-12 h-12 text-[#D4AF37]" />}
               title="Synastry War-Room"
               description="Professional compatibility analysis for strategic partnerships"
-            />
-            <FeatureCard
-              icon={<Sparkles className="w-12 h-12 text-[#D4AF37]" />}
-              title="Gemini Live AI"
-              description="Voice assistant for strategic cosmic insights"
+              link="/dashboard"
             />
             <FeatureCard
               icon={<DollarSign className="w-12 h-12 text-[#D4AF37]" />}
               title="Numerology Vault"
               description="Chaldean, Pythagorean, and Vedic calculations"
+              link="/numerology"
             />
             <FeatureCard
               icon={<Lock className="w-12 h-12 text-[#D4AF37]" />}
               title="Biometric Vault"
               description="FaceID/Fingerprint locked profile storage"
+              link="/dashboard"
             />
           </div>
         </section>
@@ -333,18 +347,30 @@ const Starfield = () => {
   return <div id="starfield-container" className="starfield" />;
 };
 
-const FeatureCard = ({ icon, title, description }) => (
-  <motion.div
+const FeatureCard = ({ icon, title, description, link, isGame }) => (
+  <motion.a
+    href={link || '#'}
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className="glass-card rounded-2xl p-6 hover:-translate-y-1 hover:border-[#D4AF37]/60 transition-all duration-300"
+    className={`glass-card rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 block cursor-pointer ${
+      isGame 
+        ? 'border-[#D4AF37]/80 bg-gradient-to-br from-[#D4AF37]/5 to-transparent hover:border-[#D4AF37] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]' 
+        : 'hover:border-[#D4AF37]/60'
+    }`}
     data-testid={`feature-card-${title.toLowerCase().replace(/\\s+/g, '-')}`}
   >
     <div className="mb-4">{icon}</div>
-    <h4 className="text-xl font-bold text-white mb-2">{title}</h4>
+    <h4 className="text-xl font-bold text-white mb-2 flex items-center">
+      {title}
+      {isGame && (
+        <span className="ml-2 bg-[#D4AF37] text-[#020617] text-xs px-2 py-0.5 rounded uppercase font-bold">
+          Game
+        </span>
+      )}
+    </h4>
     <p className="text-[#94A3B8] text-sm leading-relaxed">{description}</p>
-  </motion.div>
+  </motion.a>
 );
 
 const PricingCard = ({ tier, price, period, badge, features, buttonText, onClick, buttonDisabled, premium, highlighted, enterprise }) => (
