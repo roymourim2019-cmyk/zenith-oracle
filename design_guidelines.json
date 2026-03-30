@@ -1,0 +1,94 @@
+{
+  "theme": "dark",
+  "archetype": "5 (Jewel & Luxury)",
+  "core_concept": "High-Ticket Aesthetic, 100% Scientific Accuracy, Gamified Revenue Engine",
+  "colors": {
+    "background": "#020617",
+    "surface_glass": "rgba(2, 6, 23, 0.4)",
+    "primary": "#D4AF37",
+    "primary_hover": "#F3E5AB",
+    "primary_glow": "rgba(212, 175, 55, 0.5)",
+    "secondary": "#1E293B",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#94A3B8",
+    "border_default": "rgba(212, 175, 55, 0.2)",
+    "border_highlight": "rgba(212, 175, 55, 0.8)",
+    "error": "#EF4444",
+    "success": "#10B981"
+  },
+  "typography": {
+    "heading_font": "Playfair Display",
+    "body_font": "Outfit",
+    "mono_font": "JetBrains Mono",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-bold font-serif",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-serif",
+      "h3": "text-xl sm:text-2xl font-serif",
+      "body": "text-base leading-relaxed font-sans",
+      "labels": "text-xs uppercase tracking-[0.2em] font-medium font-sans text-[#D4AF37]"
+    }
+  },
+  "spacing_and_layout": {
+    "grid_system": "Sovereign 8 Matrix: A 2x4 grid layout. Use grid-cols-1 md:grid-cols-2 lg:grid-cols-4 with gap-6 or gap-8.",
+    "container_padding": "p-6 md:p-8 lg:p-12",
+    "surfaces": {
+      "glassmorphism": "backdrop-blur-[40px] bg-[#020617]/40 border border-[#D4AF37]/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl",
+      "solid_card": "bg-[#020617] border border-[#D4AF37]/20 rounded-xl"
+    },
+    "alignment": "Optical alignment. Left-aligned data tables, centered tarot cards and circular charts."
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#D4AF37] text-[#020617] font-bold py-3 px-6 rounded-none hover:bg-[#F3E5AB] hover:shadow-[0_0_15px_rgba(212,175,55,0.6)] transition-all duration-300 uppercase tracking-widest text-sm",
+      "secondary": "bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 px-6 rounded-none hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-widest text-sm",
+      "view_logic": "text-xs uppercase tracking-widest flex items-center gap-2 text-white/50 hover:text-[#D4AF37] transition-colors bg-transparent border-none cursor-pointer"
+    },
+    "power_meter": "Circular or semi-circular SVG gauge (0-100%). Uses stroke-dasharray for progress with a glowing #D4AF37 stroke and text inside showing 'Dominance Level'.",
+    "tarot_cards": "3D flip implementation using Framer Motion (rotateY). Front: Glassmorphic arcane design. Back: Dark metallic pattern.",
+    "charts": "Astrology charts (D1, D9, D10) must use high-contrast SVG paths. Include 'Liquid Gold' flow animations using Framer Motion pathLength animations.",
+    "ads": "Free Tier Native Advanced Ads must blend with the UI: #020617 background, #D4AF37 border, marked clearly as 'Sponsored Insight'."
+  },
+  "animations": {
+    "card_hover": "Hover state should lift element -translate-y-1 and intensify the border glow (border-[#D4AF37]/60).",
+    "liquid_gold_flow": "SVG paths should animate from 0 to 1 over 2 seconds using an easeInOut curve.",
+    "page_transition": "Fade in with a slight upward drift (opacity 0 to 1, y: 10 to 0)."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.pexels.com/photos/6141905/pexels-photo-6141905.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "hero_background",
+        "description": "Abstract liquid gold and black swirls for the main landing or dashboard background."
+      },
+      {
+        "url": "https://images.pexels.com/photos/17954395/pexels-photo-17954395.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "astrology_background",
+        "description": "Milky Way galaxy background for the Synastry War-Room or Zodiac charts."
+      },
+      {
+        "url": "https://images.pexels.com/photos/32771818/pexels-photo-32771818.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "tarot_reading",
+        "description": "Visual background for 'The Oracle's Trial' Tarot Game."
+      }
+    ]
+  },
+  "testing": {
+    "requirements": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case, representing the role (e.g., data-testid='generate-d1-chart-button', data-testid='power-meter-gauge')."
+  },
+  "instructions_to_main_agent": [
+    "Install and use Playfair Display and Outfit fonts.",
+    "Implement the Sovereign 8 layout using Tailwind CSS Grid on the Dashboard.",
+    "Use Framer Motion for the Tarot Card 3D flip haptic effects and Kundali Liquid Gold SVG line drawing animations.",
+    "Ensure all generated charts (Vedic, Western, Chinese, Numerology) have a 'View Logic' button.",
+    "For the Free tier, stub out AdMob Native Advanced ad slots styled with Obsidian backgrounds and Gold borders.",
+    "Ensure glassmorphism is achieved using backdrop-blur-[40px] with a very subtle background tint (bg-[#020617]/40) and gold border.",
+    "Use lucide-react for iconography, prioritizing clean, thin strokes."
+  ],
+  "dependencies": [
+    "framer-motion",
+    "lucide-react",
+    "recharts",
+    "clsx",
+    "tailwind-merge"
+  ]
+}
