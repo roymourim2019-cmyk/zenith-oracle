@@ -106,3 +106,53 @@ class PowerMeterData(BaseModel):
     transit_influence: float
     dasha_influence: float
     recommendation: str
+
+class NakshatraPadaResult(BaseModel):
+    nakshatra: str
+    nakshatra_index: int
+    pada: int
+    degree_in_nakshatra: float
+    nakshatra_lord: str
+    pada_lord: str
+    navamsha_sign: str
+    total_padas_elapsed: int
+
+class PanchaPakshiResult(BaseModel):
+    birth_bird: str
+    birth_bird_sanskrit: str
+    birth_bird_attributes: Dict[str, str]
+    current_state: str
+    power_level: int
+    is_daytime: bool
+    current_period: int
+    period_label: str
+    all_birds: Dict[str, str]
+    weekday: str
+    strategic_guidance: str
+
+class TransitAlert(BaseModel):
+    type: str
+    title: str
+    message: str
+    severity: str
+    icon: str
+
+class PsychicUpdate(BaseModel):
+    collective_energy_rating: int
+    quality: str
+    moon_phase: str
+    guidance: str
+    tithi: int
+
+class HistoricalParallel(BaseModel):
+    planet: str
+    sign: str
+    degree: float
+    parallel: str
+
+class OracleFeedResponse(BaseModel):
+    generated_at: str
+    transit_alerts: List[TransitAlert]
+    psychic_update: PsychicUpdate
+    historical_parallels: List[HistoricalParallel]
+    current_transits: Dict[str, Any]

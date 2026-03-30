@@ -462,6 +462,78 @@ async def get_engine_status():
         raise HTTPException(status_code=500, detail=f"Engine status check failed: {str(e)}")
 
 
+@api_router.post("/vedic/pancha-pakshi")
+async def calculate_pancha_pakshi(
+    birth_info: BirthInfo,
+    cache: CacheService = Depends(get_cache_service)
+):
+    """Calculate Pancha-Pakshi (5-Bird) state based on Natal Moon Nakshatra"""
+    try:
+        chart = vedic_service.calculate_birth_chart(
+            birth_info.birth_date,
+            birth_info.birth_time,
+            birth_info.latitude,
+            birth_info.longitude,
+            birth_info.timezone_offset
+        )
+        
+        moon_pos = next(p for p in chart['planets'] if p['name'] == 'Moon')
+        nakshatra_size = 360.0 / 27.0
+        nakshatra_index = int(moon_pos['longitude'] / nakshatra_size) % 27
+        
+        pakshi = vedic_service.calculate_pancha_pakshi(nakshatra_index)
+        
+        pada_info = vedic_service.get_nakshatra_pada(moon_pos['longitude'])
+        
+        return {
+            "person_name": birth_info.name,
+            "moon_nakshatra": chart['lunar_mansion'],
+            "moon_sign": moon_pos['sign'],
+            "nakshatra_pada": pada_info,
+            "pancha_pakshi": pakshi,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Pancha-Pakshi calculation failed: {str(e)}")
+
+
+@api_router.get("/vedic/nakshatra-padas")
+async def get_all_nakshatra_padas():
+    """Get current transit Moon's Nakshatra Pada detail"""
+    try:
+        transits = vedic_service.calculate_current_transits()
+        moon = transits['planets']['Moon']
+        pada_info = vedic_service.get_nakshatra_pada(moon['longitude'])
+        
+        return {
+            "moon_longitude": moon['longitude'],
+            "moon_sign": moon['sign'],
+            "nakshatra_detail": pada_info,
+            "moon_phase": transits['moon_phase'],
+            "tithi": transits['tithi'],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Nakshatra Pada calculation failed: {str(e)}")
+
+
+@api_router.get("/oracle-feed")
+async def get_oracle_feed(
+    cache: CacheService = Depends(get_cache_service)
+):
+    """Generate the Oracle Feed - Cosmic Intelligence stream"""
+    cache_key = "oracle_feed:current"
+    
+    cached = await cache.get(cache_key)
+    if cached:
+        return OracleFeedResponse(**cached)
+    
+    try:
+        feed = vedic_service.generate_oracle_feed()
+        await cache.set(cache_key, feed, ttl=900)
+        return OracleFeedResponse(**feed)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Oracle Feed generation failed: {str(e)}")
+
+
 app.include_router(api_router)
 
 app.add_middleware(

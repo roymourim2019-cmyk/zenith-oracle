@@ -173,3 +173,17 @@
   border: 1px solid rgba(212, 175, 55, 0.6);
   box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
 }
+
+/* Oracle Feed Ticker Scroll */
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-scroll {
+  animation: tickerScroll 30s linear infinite;
+}
+
+.ticker-scroll:hover {
+  animation-play-state: paused;
+}

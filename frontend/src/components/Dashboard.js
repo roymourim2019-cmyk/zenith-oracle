@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Moon, Sun, Star, Shield } from 'lucide-react';
 import axios from 'axios';
 import PowerMeter from './PowerMeter';
+import OracleFeed from './OracleFeed';
 import HapticSignature from '../utils/HapticSignature';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -67,9 +68,9 @@ const Dashboard = ({ userTier, setShowPayment }) => {
         >
           <h1 className="text-5xl font-bold text-white mb-4 flex items-center">
             <Sparkles className="w-12 h-12 text-[#D4AF37] mr-4" />
-            Zenith <span className="text-[#D4AF37] ml-2">Dashboard</span>
+            Zenith <span className="text-[#D4AF37] ml-2">Command</span>
           </h1>
-          <p className="text-[#94A3B8] text-lg">Your Cosmic Command Center</p>
+          <p className="text-[#94A3B8] text-lg">The Celestial Alignment awaits your inquiry</p>
         </motion.div>
 
         {/* Module Tabs */}
@@ -156,7 +157,7 @@ const Dashboard = ({ userTier, setShowPayment }) => {
                     className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] hover:shadow-[0_0_15px_rgba(212,175,55,0.6)] transition-all duration-300 uppercase tracking-widest"
                     data-testid="generate-chart-button"
                   >
-                    {loading ? 'Calculating...' : 'Generate Chart'}
+                    {loading ? 'Channeling the Cosmos...' : 'Invoke the Oracle'}
                   </button>
                 </form>
               </motion.div>
@@ -166,8 +167,11 @@ const Dashboard = ({ userTier, setShowPayment }) => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <PowerMeter birthInfo={birthInfo} />
+            
+            {/* Oracle Feed */}
+            <OracleFeed birthInfo={birthInfo} />
             
             {/* Accuracy Lab Link */}
             <div className="glass-card rounded-2xl p-6">
@@ -176,7 +180,7 @@ const Dashboard = ({ userTier, setShowPayment }) => {
                 Accuracy Lab
               </h3>
               <p className="text-sm text-white/70 mb-4">
-                View technical specifications and mathematical integrity verification
+                View the raw Ephemeris data and mathematical integrity verification
               </p>
               <a href="/accuracy-lab">
                 <button className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm font-bold">
@@ -252,13 +256,13 @@ const ChartDisplay = ({ chartData, activeModule, userTier }) => {
         <div className="grid md:grid-cols-2 gap-4">
           <InfoCard label="Ascendant" value={chartData.ascendant_sign || 'N/A'} />
           {chartData.lunar_mansion && (
-            <InfoCard label="Nakshatra" value={chartData.lunar_mansion} />
+            <InfoCard label="Lunar Mansion" value={chartData.lunar_mansion} />
           )}
           {chartData.dasha_lord && (
-            <InfoCard label="Current Dasha" value={chartData.dasha_lord} />
+            <InfoCard label="Dasha Regent" value={`${chartData.dasha_lord} (${chartData.dasha_balance_years?.toFixed(1)}y)`} />
           )}
           {chartData.power_score && (
-            <InfoCard label="Power Score" value={`${chartData.power_score}/100`} />
+            <InfoCard label="Dominance Index" value={`${chartData.power_score}/100`} />
           )}
         </div>
 
@@ -272,9 +276,9 @@ const ChartDisplay = ({ chartData, activeModule, userTier }) => {
                 className="flex justify-between items-center bg-[#020617]/40 border border-[#D4AF37]/20 rounded-lg p-3"
               >
                 <span className="text-white font-semibold">{planet.name}</span>
-                <span className="text-[#D4AF37]">{planet.sign} {planet.degree_in_sign.toFixed(2)}°</span>
+                <span className="text-[#D4AF37]">{planet.sign} {planet.degree_in_sign.toFixed(2)}</span>
                 {planet.retrograde && (
-                  <span className="text-xs text-white/60 ml-2">(R)</span>
+                  <span className="text-xs text-red-400/80 ml-2">(R)</span>
                 )}
               </div>
             ))}
