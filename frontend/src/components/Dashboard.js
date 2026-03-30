@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Moon, Sun, Star, Shield } from 'lucide-react';
 import axios from 'axios';
 import PowerMeter from './PowerMeter';
+import HapticSignature from '../utils/HapticSignature';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -28,6 +29,8 @@ const Dashboard = ({ userTier, setShowPayment }) => {
     setLoading(true);
     setBirthInfo(formData);
 
+    const haptic = new HapticSignature();
+
     try {
       let endpoint = '';
       if (activeModule === 'vedic') endpoint = `${API}/vedic/birth-chart`;
@@ -35,6 +38,16 @@ const Dashboard = ({ userTier, setShowPayment }) => {
       
       const response = await axios.post(endpoint, formData);
       setChartData(response.data);
+      
+      // Trigger haptic feedback for each planet
+      if (response.data.planets) {
+        response.data.planets.forEach((planet, index) => {
+          setTimeout(() => {
+            haptic.trigger(planet.name);
+          }, index * 300);
+        });
+      }
+      
       setShowForm(false);
     } catch (error) {
       console.error('Chart calculation error:', error);

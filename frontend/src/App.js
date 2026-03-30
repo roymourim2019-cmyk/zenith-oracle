@@ -18,6 +18,10 @@ import PaymentModal from "./components/PaymentModal";
 import AccuracyLab from "./components/AccuracyLab";
 import MarketSiege from "./components/MarketSiege";
 import OraclesTrial from "./components/OraclesTrial";
+import GlobalSuccessMap from "./components/GlobalSuccessMap";
+import BiometricVault from "./components/BiometricVault";
+import NegotiationSimulator from "./components/NegotiationSimulator";
+import PrecisionAlerts from "./components/PrecisionAlerts";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -67,6 +71,10 @@ const App = () => {
           <Route path="/accuracy-lab" element={<AccuracyLab />} />
           <Route path="/market-siege" element={<MarketSiege />} />
           <Route path="/oracles-trial" element={<OraclesTrial />} />
+          <Route path="/global-success-map" element={<GlobalSuccessMap />} />
+          <Route path="/biometric-vault" element={<BiometricVault />} />
+          <Route path="/negotiation-simulator" element={<NegotiationSimulator />} />
+          <Route path="/precision-alerts" element={<PrecisionAlerts />} />
         </Routes>
       </BrowserRouter>
 
