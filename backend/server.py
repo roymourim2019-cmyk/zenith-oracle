@@ -47,7 +47,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Zenith Oracle API",
-    description="100% Scientific Accuracy | High-Ticket Astrology Engine",
+    description="High-Resonance Mathematical Precision | Enterprise Astrology Engine",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -532,6 +532,56 @@ async def get_oracle_feed(
         return OracleFeedResponse(**feed)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Oracle Feed generation failed: {str(e)}")
+
+
+class VocalOracleRequest(BaseModel):
+    name: str
+    birth_date: str
+    birth_time: str
+    latitude: float
+    longitude: float
+    timezone_offset: float = 5.5
+
+
+@api_router.post("/vocal-oracle")
+async def vocal_oracle_briefing(req: VocalOracleRequest):
+    """Generate a strategic briefing via Gemini based on user's Dasha/Transit data"""
+    try:
+        chart = vedic_service.calculate_birth_chart(
+            req.birth_date, req.birth_time,
+            req.latitude, req.longitude, req.timezone_offset
+        )
+        
+        transits = vedic_service.calculate_current_transits()
+        moon_pos = next(p for p in chart['planets'] if p['name'] == 'Moon')
+        nak_size = 360.0 / 27.0
+        nak_idx = int(moon_pos['longitude'] / nak_size) % 27
+        pakshi = vedic_service.calculate_pancha_pakshi(nak_idx)
+        
+        context = f"""STRATEGIC BRIEFING DATA:
+Subject: {req.name}
+Ascendant: {chart.get('ascendant_sign', 'N/A')}
+Moon: {moon_pos['sign']} in {chart.get('lunar_mansion', 'N/A')}
+Dasha Lord: {chart.get('dasha_lord', 'N/A')} ({chart.get('dasha_balance_years', 0):.1f} years remaining)
+Power Score: {chart.get('power_score', 0)}/100
+Pancha-Pakshi: {pakshi['birth_bird']} — Currently {pakshi['current_state']} (Power: {pakshi['power_level']}%)
+Moon Phase: {transits['moon_phase']}
+Active Aspects: {', '.join(f"{a['planet1']}-{a['planet2']} {a['aspect']}" for a in transits['aspects'][:3])}
+
+Generate a 3-sentence strategic briefing. Sentence 1: Current cosmic position and authority level. Sentence 2: One decisive tactical move for the next 12 hours. Sentence 3: The single biggest risk to avoid. Tone: Authoritative, concise, alpha. No hedging."""
+
+        briefing = await gemini_service.answer_question(context, "")
+        
+        return {
+            "briefing": briefing,
+            "dasha_lord": chart.get('dasha_lord', 'N/A'),
+            "power_score": chart.get('power_score', 0),
+            "pakshi_state": pakshi['current_state'],
+            "pakshi_bird": pakshi['birth_bird'],
+            "moon_phase": transits['moon_phase'],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Vocal Oracle failed: {str(e)}")
 
 
 app.include_router(api_router)

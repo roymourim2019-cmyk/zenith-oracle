@@ -27,6 +27,7 @@ import GlobalSuccessMap from "./components/GlobalSuccessMap";
 import BiometricVault from "./components/BiometricVault";
 import NegotiationSimulator from "./components/NegotiationSimulator";
 import PrecisionAlerts from "./components/PrecisionAlerts";
+import VocalOracle from "./components/VocalOracle";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -85,6 +86,7 @@ const App = () => {
           <Route path="/sovereign-duel" element={<SovereignDuel />} />
         </Routes>
         <BottomNav />
+        <VocalOracle />
       </BrowserRouter>
 
       {showPayment && (
@@ -174,10 +176,10 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 gold-glow" style={{fontFamily: 'Playfair Display, serif'}}>
-                100% Scientific Accuracy
+                High-Resonance Alignment
               </h2>
               <p className="text-xl md:text-2xl text-[#94A3B8] mb-8 font-light">
-                High-Ticket Aesthetic | Gamified Revenue Engine
+                Mathematical Precision | Gamified Revenue Engine
               </p>
               <p className="text-lg text-white/80 mb-12 leading-relaxed">
                 Swiss Ephemeris precision. Vedic D1-D60 charts. Western Topocentric. 
@@ -196,6 +198,9 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
             </motion.div>
           </div>
         </section>
+
+        {/* Oracle Feed Ticker - Home */}
+        <HomeOracleTicker />
 
         {/* Sovereign 8 Matrix */}
         <section className="container mx-auto px-6 py-20">
@@ -392,7 +397,7 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
         <footer className="border-t border-[#D4AF37]/20 py-8 mt-20">
           <div className="container mx-auto px-6 text-center">
             <p className="text-[#94A3B8] text-sm">
-              Swiss Ephemeris-powered. 100% Scientific Accuracy.
+              Swiss Ephemeris-powered. Mathematical Precision.
             </p>
             <p className="text-[#D4AF37] text-xs mt-2" style={{fontSize: '10px'}}>
               © 2026 Zenith Oracle Enterprise
@@ -409,7 +414,6 @@ const Starfield = () => {
     const container = document.getElementById('starfield-container');
     if (!container) return;
     
-    // Generate random stars
     for (let i = 0; i < 100; i++) {
       const star = document.createElement('div');
       star.className = 'star';
@@ -420,8 +424,31 @@ const Starfield = () => {
       container.appendChild(star);
     }
     
+    // Gyroscope parallax (mobile) or mouse parallax (desktop)
+    const handleOrientation = (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        const x = Math.min(Math.max(e.gamma, -30), 30) / 30;
+        const y = Math.min(Math.max(e.beta - 45, -30), 30) / 30;
+        container.style.transform = `translate(${x * 8}px, ${y * 8}px)`;
+      }
+    };
+    
+    const handleMouse = (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      container.style.transform = `translate(${x * 6}px, ${y * 6}px)`;
+    };
+    
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+    window.addEventListener('mousemove', handleMouse);
+    container.classList.add('starfield-parallax');
+    
     return () => {
       if (container) container.innerHTML = '';
+      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener('mousemove', handleMouse);
     };
   }, []);
   
@@ -540,10 +567,10 @@ const BottomNav = () => {
   if (location.pathname === '/') return null;
 
   const navItems = [
-    { icon: <HomeIcon className="w-5 h-5" />, label: 'Home', path: '/' },
-    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Command', path: '/dashboard' },
-    { icon: <Gamepad2 className="w-5 h-5" />, label: 'Games', path: '/#war-room' },
-    { icon: <Sparkles className="w-5 h-5" />, label: 'Tarot', path: '/tarot' },
+    { icon: <Eye className="w-5 h-5" />, label: 'Oracle', path: '/dashboard' },
+    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Matrix', path: '/' },
+    { icon: <Swords className="w-5 h-5" />, label: 'War Room', path: '/#war-room' },
+    { icon: <Globe className="w-5 h-5" />, label: 'Profile', path: '/biometric-vault' },
   ];
 
   const handleNav = (path) => {
@@ -579,6 +606,61 @@ const BottomNav = () => {
         })}
       </div>
     </nav>
+  );
+};
+
+const HomeOracleTicker = () => {
+  const [transits, setTransits] = useState(null);
+
+  useEffect(() => {
+    const BACKEND = process.env.REACT_APP_BACKEND_URL;
+    fetch(`${BACKEND}/api/oracle-feed`)
+      .then(r => r.json())
+      .then(d => setTransits(d))
+      .catch(() => {});
+  }, []);
+
+  if (!transits) return null;
+
+  return (
+    <section className="relative z-10 py-6 border-y border-[#D4AF37]/15" data-testid="home-oracle-ticker">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center space-x-4 mb-3">
+          <span className="w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse" />
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37] font-semibold">Cosmic Intelligence — Live Transit Feed</span>
+          <span className="text-[10px] text-white/30">{transits.psychic_update?.moon_phase} | Energy {transits.psychic_update?.collective_energy_rating}/100</span>
+        </div>
+        <div className="overflow-hidden">
+          <div className="ticker-scroll flex space-x-8 text-xs text-white/60 whitespace-nowrap">
+            {transits.current_transits && Object.entries(transits.current_transits).map(([name, data]) => (
+              <span key={name} className="inline-flex items-center space-x-1.5">
+                <span className="text-[#D4AF37] font-semibold">{name}</span>
+                <span>{data.sign} {data.degree?.toFixed(1)}</span>
+                <span className="text-white/30">|</span>
+                <span className="text-white/40">{data.nakshatra} P{data.pada}</span>
+                {data.retrograde && <span className="text-[#D4AF37]/60 text-[10px]">(R)</span>}
+              </span>
+            ))}
+            {transits.current_transits && Object.entries(transits.current_transits).map(([name, data]) => (
+              <span key={`dup-${name}`} className="inline-flex items-center space-x-1.5">
+                <span className="text-[#D4AF37] font-semibold">{name}</span>
+                <span>{data.sign} {data.degree?.toFixed(1)}</span>
+                <span className="text-white/30">|</span>
+                <span className="text-white/40">{data.nakshatra} P{data.pada}</span>
+                {data.retrograde && <span className="text-[#D4AF37]/60 text-[10px]">(R)</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+        {transits.transit_alerts?.length > 0 && (
+          <div className="mt-3 text-xs text-white/40">
+            <span className="text-[#D4AF37] font-semibold">{transits.transit_alerts[0]?.title}</span>
+            <span className="mx-2 text-white/20">—</span>
+            <span className="italic">{transits.transit_alerts[0]?.message?.slice(0, 120)}...</span>
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 

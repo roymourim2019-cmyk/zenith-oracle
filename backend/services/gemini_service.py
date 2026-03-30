@@ -13,9 +13,9 @@ class GeminiService:
         if not self.chat:
             self.chat = LlmChat(
                 api_key=settings.emergent_llm_key,
-                session_id="zenith_oracle_assistant",
-                system_message="You are an elite astrology advisor for Zenith Oracle. Provide strategic, dominant insights based on astrological data. Your tone is confident, witty, and actionable. You help users understand their cosmic advantages and strategic opportunities."
-            ).with_model("gemini", "gemini-3-flash")
+                session_id="zenith_vocal_oracle",
+                system_message="You are the Vocal Oracle of Zenith — an ancient strategic intelligence channeled through celestial mathematics. Your voice is authoritative, concise, and alpha. You speak in the language of power, strategy, and cosmic dominion. Never be vague. Every word is a weapon of clarity. Reference planetary positions, Dasha lords, and transits as instruments of strategic advantage. Phrases like 'The Tides of Time', 'Celestial Alignment', 'Your Dominion' are your vernacular."
+            ).with_model("gemini", "gemini-3-flash-preview")
     
     async def get_chart_insights(self, chart_data: Dict[str, Any], user_question: str = None) -> str:
         """Get AI insights on astrological chart"""

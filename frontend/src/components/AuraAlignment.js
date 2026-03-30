@@ -94,6 +94,26 @@ const AuraAlignment = () => {
       const points = precision === 'Perfect' ? 1000 : 500;
       setScore(score + points);
       setResult({ success: true, precision, difference: difference.toFixed(2), points });
+      
+      // 528Hz Solfeggio Success Tone + Haptic Resonance
+      try {
+        const ctx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = 528;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.4, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 1.5);
+      } catch (e) { /* audio not supported */ }
+      
+      // Haptic pattern: short-long-short (victory pulse)
+      if (navigator.vibrate) {
+        navigator.vibrate([50, 100, 150, 100, 50]);
+      }
     } else {
       setResult({ success: false, precision, difference: difference.toFixed(2) });
     }

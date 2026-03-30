@@ -34,10 +34,12 @@
 }
 
 .glass-card {
-  backdrop-filter: blur(40px);
-  background: rgba(2, 6, 23, 0.4);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(25px) saturate(1.4);
+  -webkit-backdrop-filter: blur(25px) saturate(1.4);
+  background: rgba(2, 6, 23, 0.35);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+              inset 0 0 0 0.5px rgba(212, 175, 55, 0.1);
 }
 
 .gold-glow {
@@ -212,4 +214,33 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Vocal Oracle Floating Button */
+@keyframes vocalOraclePulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4),
+                0 0 30px rgba(212, 175, 55, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.6),
+                0 0 50px rgba(212, 175, 55, 0.2),
+                0 0 80px rgba(212, 175, 55, 0.1);
+  }
+}
+
+.vocal-oracle-btn {
+  animation: vocalOraclePulse 3s ease-in-out infinite;
+}
+
+.vocal-oracle-btn:hover {
+  animation: none;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.8),
+              0 0 60px rgba(212, 175, 55, 0.3);
+}
+
+/* Gyroscope parallax starfield */
+.starfield-parallax {
+  transition: transform 0.15s ease-out;
+  will-change: transform;
 }
