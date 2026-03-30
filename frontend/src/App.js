@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
-  Users, Gift, DollarSign, Lock, ChevronRight, Globe 
+  Users, Gift, DollarSign, Lock, ChevronRight, Globe,
+  Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
+  Volume2, Crown, Eye
 } from "lucide-react";
 import "@/App.css";
 import Dashboard from "./components/Dashboard";
@@ -18,6 +20,9 @@ import PaymentModal from "./components/PaymentModal";
 import AccuracyLab from "./components/AccuracyLab";
 import MarketSiege from "./components/MarketSiege";
 import OraclesTrial from "./components/OraclesTrial";
+import VortexVelocity from "./components/VortexVelocity";
+import AuraAlignment from "./components/AuraAlignment";
+import SovereignDuel from "./components/SovereignDuel";
 import GlobalSuccessMap from "./components/GlobalSuccessMap";
 import BiometricVault from "./components/BiometricVault";
 import NegotiationSimulator from "./components/NegotiationSimulator";
@@ -75,7 +80,11 @@ const App = () => {
           <Route path="/biometric-vault" element={<BiometricVault />} />
           <Route path="/negotiation-simulator" element={<NegotiationSimulator />} />
           <Route path="/precision-alerts" element={<PrecisionAlerts />} />
+          <Route path="/vortex-velocity" element={<VortexVelocity />} />
+          <Route path="/aura-alignment" element={<AuraAlignment />} />
+          <Route path="/sovereign-duel" element={<SovereignDuel />} />
         </Routes>
+        <BottomNav />
       </BrowserRouter>
 
       {showPayment && (
@@ -188,7 +197,7 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
           </div>
         </section>
 
-        {/* Features Grid */}
+        {/* Sovereign 8 Matrix */}
         <section className="container mx-auto px-6 py-20">
           <div className="sovereign-grid">
             <FeatureCard
@@ -217,17 +226,17 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               isGame={true}
             />
             <FeatureCard
-              icon={<Sparkles className="w-12 h-12 text-[#D4AF37]" />}
+              icon={<Eye className="w-12 h-12 text-[#D4AF37]" />}
               title="Oracle's Trial"
               description="High-stakes tarot intuition quiz - earn Gold Dust rewards"
               link="/oracles-trial"
               isGame={true}
             />
             <FeatureCard
-              icon={<Users className="w-12 h-12 text-[#D4AF37]" />}
-              title="Synastry War-Room"
-              description="Professional compatibility analysis for strategic partnerships"
-              link="/dashboard"
+              icon={<Sparkles className="w-12 h-12 text-[#D4AF37]" />}
+              title="Tarot Deck"
+              description="78+44 Alpha Strategy Cards drawn by Mersenne Twister precision"
+              link="/tarot"
             />
             <FeatureCard
               icon={<DollarSign className="w-12 h-12 text-[#D4AF37]" />}
@@ -239,7 +248,71 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               icon={<Lock className="w-12 h-12 text-[#D4AF37]" />}
               title="Biometric Vault"
               description="FaceID/Fingerprint locked profile storage"
-              link="/dashboard"
+              link="/biometric-vault"
+            />
+          </div>
+        </section>
+
+        {/* WAR ROOM: ENTERPRISE STRATEGY */}
+        <section className="container mx-auto px-6 py-20 relative" style={{ zIndex: 100 }} id="war-room" data-testid="war-room-section">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12 text-center"
+          >
+            <h3
+              className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-4 war-room-pulse"
+              style={{ fontFamily: 'Playfair Display, serif' }}
+              data-testid="war-room-header"
+            >
+              THE WAR ROOM: ENTERPRISE STRATEGY
+            </h3>
+            <p className="text-[#94A3B8] text-lg max-w-2xl mx-auto">
+              Five celestial battlegrounds forged from Swiss Ephemeris precision. Enter, compete, dominate.
+            </p>
+          </motion.div>
+
+          <div className="war-room-carousel flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible">
+            <GameCard
+              icon={<TrendingUp className="w-10 h-10 text-[#D4AF37]" />}
+              title="Market Siege"
+              description="60-second Numerology battle. Crush legendary opponents with your name's cosmic vibration."
+              link="/market-siege"
+              badge="Numerology"
+              index={0}
+            />
+            <GameCard
+              icon={<Eye className="w-10 h-10 text-[#D4AF37]" />}
+              title="Oracle's Trial"
+              description="5-round Tarot intuition challenge. Identify true card meanings, earn Gold Dust."
+              link="/oracles-trial"
+              badge="Tarot"
+              index={1}
+            />
+            <GameCard
+              icon={<Activity className="w-10 h-10 text-[#D4AF37]" />}
+              title="Vortex Velocity"
+              description="Lock planetary degrees with arc-second precision. Race the real-time Ephemeris."
+              link="/vortex-velocity"
+              badge="Transit"
+              index={2}
+            />
+            <GameCard
+              icon={<Volume2 className="w-10 h-10 text-[#D4AF37]" />}
+              title="Aura Alignment"
+              description="Match your frequency to the Moon's Solfeggio tone. Audio-visual cosmic tuning."
+              link="/aura-alignment"
+              badge="Solfeggio"
+              index={3}
+            />
+            <GameCard
+              icon={<Crown className="w-10 h-10 text-[#D4AF37]" />}
+              title="Sovereign Duel"
+              description="Chart vs. Chart. Seven planets clash for supremacy against mythic legends."
+              link="/sovereign-duel"
+              badge="Vedic"
+              index={4}
             />
           </div>
         </section>
@@ -428,5 +501,85 @@ const PricingCard = ({ tier, price, period, badge, features, buttonText, onClick
     </button>
   </motion.div>
 );
+
+const GameCard = ({ icon, title, description, link, badge, index }) => (
+  <motion.a
+    href={link}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.08 }}
+    className="glass-card rounded-2xl p-6 min-w-[280px] snap-center border-[#D4AF37]/40 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all duration-300 block cursor-pointer group"
+    data-testid={`game-card-${title.toLowerCase().replace(/\s+/g, '-')}`}
+  >
+    <div className="flex items-center justify-between mb-4">
+      <div className="w-14 h-14 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center border border-[#D4AF37]/30 group-hover:bg-[#D4AF37]/20 transition-all">
+        {icon}
+      </div>
+      <span className="text-[9px] bg-[#D4AF37]/20 text-[#D4AF37] px-2.5 py-1 rounded uppercase tracking-widest font-bold">
+        {badge}
+      </span>
+    </div>
+    <h4 className="text-lg font-bold text-white mb-2 flex items-center">
+      {title}
+      <span className="ml-2 bg-[#D4AF37] text-[#020617] text-[9px] px-1.5 py-0.5 rounded uppercase font-bold">
+        Game
+      </span>
+    </h4>
+    <p className="text-[#94A3B8] text-sm leading-relaxed">{description}</p>
+    <div className="mt-4 flex items-center text-[#D4AF37] text-xs font-semibold uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+      Enter Arena <ChevronRight className="w-3.5 h-3.5 ml-1" />
+    </div>
+  </motion.a>
+);
+
+const BottomNav = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  if (location.pathname === '/') return null;
+
+  const navItems = [
+    { icon: <HomeIcon className="w-5 h-5" />, label: 'Home', path: '/' },
+    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Command', path: '/dashboard' },
+    { icon: <Gamepad2 className="w-5 h-5" />, label: 'Games', path: '/#war-room' },
+    { icon: <Sparkles className="w-5 h-5" />, label: 'Tarot', path: '/tarot' },
+  ];
+
+  const handleNav = (path) => {
+    if (path === '/#war-room') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById('war-room');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    } else {
+      navigate(path);
+    }
+  };
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-[200] bg-[#020617]/90 backdrop-blur-xl border-t border-[#D4AF37]/20" data-testid="bottom-nav">
+      <div className="max-w-lg mx-auto flex justify-around py-2">
+        {navItems.map(item => {
+          const isActive = location.pathname === item.path;
+          return (
+            <button
+              key={item.label}
+              onClick={() => handleNav(item.path)}
+              className={`flex flex-col items-center py-1.5 px-3 rounded-lg transition-all ${
+                isActive ? 'text-[#D4AF37]' : 'text-white/40 hover:text-white/70'
+              }`}
+              data-testid={`nav-${item.label.toLowerCase()}`}
+            >
+              {item.icon}
+              <span className="text-[9px] uppercase tracking-widest mt-0.5 font-semibold">{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+};
 
 export default App;
