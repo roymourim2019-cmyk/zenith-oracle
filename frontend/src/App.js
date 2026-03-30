@@ -15,6 +15,7 @@ import NumerologyCalculator from "./components/NumerologyCalculator";
 import TarotReader from "./components/TarotReader";
 import PowerMeter from "./components/PowerMeter";
 import PaymentModal from "./components/PaymentModal";
+import AccuracyLab from "./components/AccuracyLab";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/numerology" element={<NumerologyCalculator />} />
           <Route path="/tarot" element={<TarotReader />} />
           <Route path="/power-meter" element={<PowerMeter />} />
+          <Route path="/accuracy-lab" element={<AccuracyLab />} />
         </Routes>
       </BrowserRouter>
 

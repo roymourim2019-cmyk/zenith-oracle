@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Moon, Sun, Star } from 'lucide-react';
+import { Sparkles, Moon, Sun, Star, Shield } from 'lucide-react';
 import axios from 'axios';
 import PowerMeter from './PowerMeter';
 
@@ -155,6 +155,22 @@ const Dashboard = ({ userTier, setShowPayment }) => {
           {/* Sidebar */}
           <div className="space-y-6">
             <PowerMeter birthInfo={birthInfo} />
+            
+            {/* Accuracy Lab Link */}
+            <div className="glass-card rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+                <Shield className="w-5 h-5 text-[#D4AF37] mr-2" />
+                Accuracy Lab
+              </h3>
+              <p className="text-sm text-white/70 mb-4">
+                View technical specifications and mathematical integrity verification
+              </p>
+              <a href="/accuracy-lab">
+                <button className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm font-bold">
+                  Open Lab
+                </button>
+              </a>
+            </div>
             
             {userTier === 'free' && (
               <div className="glass-card rounded-2xl p-6 border-[#D4AF37]/40">
