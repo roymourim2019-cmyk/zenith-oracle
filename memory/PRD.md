@@ -59,9 +59,6 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 ## Prioritized Backlog
 
 ### P0 - In Progress
-- [ ] War Room container page (WarRoom.js with 5-card carousel)
-- [ ] SovereignDuel.js (5th game)
-- [ ] Wire VortexVelocity + AuraAlignment + SovereignDuel routes in App.js
 - [ ] Advanced Tarot Reader (aura-linked, sound effects, manual card selection)
 
 ### P1
@@ -71,3 +68,17 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 ### P2
 - [ ] Gemini Live voice assistant integration
 - [ ] Alpha Daily Briefing (60-second morning audio for Premium)
+
+## Changelog
+
+### 2026-03-30 - War Room & Oracle Feed Upgrade
+- Implemented Pancha-Pakshi Oracle (5-Bird cycle from Swiss Ephemeris)
+- Added Nakshatra Padas (4-quarter precision)
+- Created Oracle Feed ("COSMIC INTELLIGENCE") with transit alerts, psychic updates, historical parallels
+- Shifted tone to Strategic/Ancient voice
+- Created THE WAR ROOM: ENTERPRISE STRATEGY section with 5 game carousel
+- Created SovereignDuel.js (chart-vs-chart planet-by-planet dominance clash)
+- Wired VortexVelocity, AuraAlignment, SovereignDuel into App.js routes
+- Restored Tarot Deck to Sovereign 8 grid Tile #6
+- Added z-index 100 on War Room section, pulse animation on header
+- Added bottom navigation bar (Home/Command/Games/Tarot) on inner pages
