@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
-  Users, Gift, DollarSign, Lock, ChevronRight 
+  Users, Gift, DollarSign, Lock, ChevronRight, Globe 
 } from "lucide-react";
 import "@/App.css";
 import Dashboard from "./components/Dashboard";
@@ -22,11 +22,18 @@ const API = `${BACKEND_URL}/api`;
 const App = () => {
   const [userTier, setUserTier] = useState("free");
   const [showPayment, setShowPayment] = useState(false);
+  const [currency, setCurrency] = useState("INR");
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const tier = localStorage.getItem("userTier") || "free";
     setUserTier(tier);
+    
+    // Detect user location for currency
+    const userLang = navigator.language || navigator.userLanguage;
+    if (!userLang.startsWith('en-IN') && !userLang.startsWith('hi')) {
+      setCurrency("USD");
+    }
   }, []);
 
   return (
@@ -38,6 +45,8 @@ const App = () => {
               userTier={userTier} 
               setUserTier={setUserTier}
               setShowPayment={setShowPayment}
+              currency={currency}
+              setCurrency={setCurrency}
             />
           } />
           <Route path="/dashboard" element={
@@ -63,15 +72,19 @@ const App = () => {
             localStorage.setItem("userTier", "premium");
             setShowPayment(false);
           }}
+          currency={currency}
         />
       )}
     </div>
   );
 };
 
-const Home = ({ userTier, setUserTier, setShowPayment }) => {
+const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) => {
   return (
     <div className="relative min-h-screen overflow-hidden">
+      {/* Starfield Background */}
+      <Starfield />
+      
       {/* Hero Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center opacity-20"
@@ -91,16 +104,26 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
               className="flex items-center space-x-3"
             >
               <Sparkles className="w-10 h-10 text-[#D4AF37]" />
-              <h1 className="text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-3xl font-bold text-white tracking-tight" style={{fontFamily: 'Playfair Display, serif'}}>
                 ZENITH <span className="text-[#D4AF37]">ORACLE</span>
               </h1>
             </motion.div>
 
             <div className="flex items-center space-x-4">
+              {/* Currency Toggle */}
+              <button
+                onClick={() => setCurrency(currency === "INR" ? "USD" : "INR")}
+                className="flex items-center space-x-2 text-white/60 hover:text-[#D4AF37] transition-colors text-sm"
+                data-testid="currency-toggle"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{currency === "INR" ? "₹ INR" : "$ USD"}</span>
+              </button>
+              
               {userTier === "free" && (
                 <button
                   onClick={() => setShowPayment(true)}
-                  className="bg-[#D4AF37] text-[#020617] font-bold py-2 px-6 hover:bg-[#F3E5AB] transition-all duration-300 uppercase tracking-widest text-sm"
+                  className="bg-[#D4AF37] text-[#020617] font-bold py-2 px-6 hover:bg-[#F3E5AB] transition-all duration-300 uppercase tracking-widest text-sm premium-glow"
                   data-testid="upgrade-premium-button"
                 >
                   <Gift className="w-4 h-4 inline mr-2" />
@@ -127,7 +150,7 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 gold-glow">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 gold-glow" style={{fontFamily: 'Playfair Display, serif'}}>
                 100% Scientific Accuracy
               </h2>
               <p className="text-xl md:text-2xl text-[#94A3B8] mb-8 font-light">
@@ -140,7 +163,7 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
 
               <a href="/dashboard">
                 <button 
-                  className="bg-[#D4AF37] text-[#020617] font-bold py-4 px-12 text-lg hover:bg-[#F3E5AB] hover:shadow-[0_0_15px_rgba(212,175,55,0.6)] transition-all duration-300 uppercase tracking-widest"
+                  className="oracle-button text-white font-bold py-4 px-12 text-lg uppercase tracking-widest"
                   data-testid="enter-oracle-button"
                 >
                   Enter the Oracle
@@ -200,29 +223,15 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
         {/* Pricing Section */}
         {userTier === "free" && (
           <section className="container mx-auto px-6 py-20">
-            <div className="max-w-4xl mx-auto">
-              <h3 className="text-4xl font-bold text-center text-white mb-12">
+            <div className="max-w-6xl mx-auto">
+              <h3 className="text-4xl font-bold text-center text-white mb-12" style={{fontFamily: 'Playfair Display, serif'}}>
                 Choose Your <span className="text-[#D4AF37]">Dominance Level</span>
               </h3>
               
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-3 gap-8">
                 <PricingCard
-                  tier="Free"
-                  price="₹0"
-                  features={[
-                    "Basic Vedic & Western charts",
-                    "Tarot card readings",
-                    "Power Meter (limited)",
-                    "Native advanced ads",
-                    "Watch ads for deep reports (4 hours)"
-                  ]}
-                  buttonText="Current Tier"
-                  buttonDisabled={true}
-                />
-                
-                <PricingCard
-                  tier="Zenith Premium"
-                  price="₹999"
+                  tier="Monthly Alpha"
+                  price={currency === "INR" ? "₹499" : "$9.99"}
                   period="/month"
                   features={[
                     "100% Ad-Free Experience",
@@ -230,12 +239,52 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
                     "Unlimited Synastry analysis",
                     "PDF Export capability",
                     "AI Daily Briefings",
-                    "'View Logic' transparency buttons",
-                    "Unlimited Profile Vault"
+                    "'View Logic' transparency",
+                    "Cancel anytime"
                   ]}
                   buttonText="Upgrade Now"
                   onClick={() => setShowPayment(true)}
                   premium={true}
+                />
+                
+                <PricingCard
+                  tier="Yearly Alpha"
+                  price={currency === "INR" ? "₹3,999" : "$79.99"}
+                  period="/year"
+                  badge="Save 33%"
+                  features={[
+                    "Everything in Monthly",
+                    "2 months free",
+                    "Priority AI insights",
+                    "Early access to features",
+                    "Unlimited Profile Vault",
+                    "Advanced Dasha reports",
+                    "Best value"
+                  ]}
+                  buttonText="Upgrade Now"
+                  onClick={() => setShowPayment(true)}
+                  premium={true}
+                  highlighted={true}
+                />
+                
+                <PricingCard
+                  tier="Enterprise Lifetime"
+                  price={currency === "INR" ? "₹24,999" : "$499"}
+                  period="one-time"
+                  badge="Top 1%"
+                  features={[
+                    "Everything in Yearly",
+                    "Lifetime access",
+                    "Exclusive Alpha cards",
+                    "Personal AI advisor",
+                    "Priority support",
+                    "Private consultations",
+                    "Legacy pricing lock"
+                  ]}
+                  buttonText="Join Elite"
+                  onClick={() => setShowPayment(true)}
+                  premium={true}
+                  enterprise={true}
                 />
               </div>
             </div>
@@ -246,16 +295,40 @@ const Home = ({ userTier, setUserTier, setShowPayment }) => {
         <footer className="border-t border-[#D4AF37]/20 py-8 mt-20">
           <div className="container mx-auto px-6 text-center">
             <p className="text-[#94A3B8] text-sm">
-              © 2026 Zenith Oracle. Swiss Ephemeris-powered. 100% Scientific Accuracy.
+              Swiss Ephemeris-powered. 100% Scientific Accuracy.
             </p>
-            <p className="text-[#94A3B8] text-xs mt-2">
-              2-Hour Takedown Protocol | GDPR/DPDP 2026 Compliant
+            <p className="text-[#D4AF37] text-xs mt-2" style={{fontSize: '10px'}}>
+              © 2026 Zenith Oracle Enterprise
             </p>
           </div>
         </footer>
       </div>
     </div>
   );
+};
+
+const Starfield = () => {
+  useEffect(() => {
+    const container = document.getElementById('starfield-container');
+    if (!container) return;
+    
+    // Generate random stars
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.opacity = Math.random() * 0.5 + 0.2;
+      container.appendChild(star);
+    }
+    
+    return () => {
+      if (container) container.innerHTML = '';
+    };
+  }, []);
+  
+  return <div id="starfield-container" className="starfield" />;
 };
 
 const FeatureCard = ({ icon, title, description }) => (
@@ -272,15 +345,23 @@ const FeatureCard = ({ icon, title, description }) => (
   </motion.div>
 );
 
-const PricingCard = ({ tier, price, period, features, buttonText, onClick, buttonDisabled, premium }) => (
+const PricingCard = ({ tier, price, period, badge, features, buttonText, onClick, buttonDisabled, premium, highlighted, enterprise }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
-    className={`glass-card rounded-2xl p-8 ${premium ? 'border-[#D4AF37]/80 gold-border-glow' : ''}`}
+    className={`glass-card rounded-2xl p-8 relative ${highlighted ? 'border-[#D4AF37] scale-105' : premium ? 'border-[#D4AF37]/80' : ''} ${highlighted ? 'gold-border-glow' : ''}`}
     data-testid={`pricing-card-${tier.toLowerCase().replace(/\\s+/g, '-')}`}
   >
-    <h4 className="text-2xl font-bold text-white mb-2">{tier}</h4>
+    {badge && (
+      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+        <span className="bg-[#D4AF37] text-[#020617] px-4 py-1 text-xs font-bold uppercase tracking-widest">
+          {badge}
+        </span>
+      </div>
+    )}
+    
+    <h4 className="text-2xl font-bold text-white mb-2" style={{fontFamily: 'Playfair Display, serif'}}>{tier}</h4>
     <div className="mb-6">
       <span className="text-5xl font-bold text-[#D4AF37]">{price}</span>
       {period && <span className="text-[#94A3B8]">{period}</span>}
@@ -301,7 +382,9 @@ const PricingCard = ({ tier, price, period, features, buttonText, onClick, butto
       className={`w-full py-3 font-bold uppercase tracking-widest text-sm transition-all duration-300 ${
         buttonDisabled
           ? 'bg-[#1E293B] text-[#94A3B8] cursor-not-allowed'
-          : 'bg-[#D4AF37] text-[#020617] hover:bg-[#F3E5AB] hover:shadow-[0_0_15px_rgba(212,175,55,0.6)]'
+          : enterprise
+          ? 'bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] hover:shadow-[0_0_30px_rgba(212,175,55,0.8)] gold-pulse'
+          : 'bg-[#D4AF37] text-[#020617] hover:bg-[#F3E5AB] gold-pulse'
       }`}
       data-testid={`pricing-button-${tier.toLowerCase().replace(/\\s+/g, '-')}`}
     >
