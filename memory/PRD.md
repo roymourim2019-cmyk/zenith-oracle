@@ -64,10 +64,10 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 ### P1
 - [ ] AdMob Rewarded Videos in War Room (Cosmic Reset on loss, Premium bypass)
 - [ ] Redis installation and proper caching
+- [ ] Alpha Daily Briefing (60-second morning audio for Premium) — backend service exists
 
 ### P2
-- [ ] Gemini Live voice assistant integration
-- [ ] Alpha Daily Briefing (60-second morning audio for Premium)
+- [ ] Gemini Live voice assistant full conversation mode (multi-turn)
 
 ## Changelog
 
@@ -82,3 +82,12 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 - Restored Tarot Deck to Sovereign 8 grid Tile #6
 - Added z-index 100 on War Room section, pulse animation on header
 - Added bottom navigation bar (Home/Command/Games/Tarot) on inner pages
+
+### 2026-03-30 - Ancient Strategy & Sensory UI Upgrade
+- Replaced "100% Scientific Accuracy" with "High-Resonance Alignment" / "Mathematical Precision"
+- Added Oracle Feed live ticker on Home Screen ("COSMIC INTELLIGENCE — LIVE TRANSIT FEED")
+- Liquid Glass: backdrop-filter blur(25px) saturate(1.4) + 1px liquid gold border on all glass-card elements
+- Gyroscope Parallax: DeviceOrientation API (mobile) + mouse parallax (desktop) on Starfield
+- 528Hz Solfeggio success tone (Web Audio API) + haptic vibration pattern on Aura Alignment achievement
+- Created Vocal Oracle: floating Gemini-powered button (gemini-3-flash-preview) for strategic briefings with Web Speech API text-to-speech
+- Updated bottom nav to [Oracle | Matrix | War Room | Profile]
