@@ -271,6 +271,23 @@ class SynthesisEngine:
         ketu_nak_idx = int(ketu_long / nak_size) % 27
         ketu_nakshatra = self.NAKSHATRAS[ketu_nak_idx]
 
+        # Karmic Mission for 2026
+        ketu_house_missions = {
+            'Aries': "manifest warrior-instinct into executive leadership without aggression",
+            'Taurus': "transmute past-life material attachment into conscious abundance creation",
+            'Gemini': "channel accumulated knowledge into decisive, singular communication",
+            'Cancer': "transform emotional intuition into physical wealth and institutional influence",
+            'Leo': "redirect creative sovereignty away from ego toward collective empowerment",
+            'Virgo': "apply past-life precision to systems that generate scalable impact",
+            'Libra': "convert diplomatic mastery into strategic alliance architecture",
+            'Scorpio': "surface hidden power into transparent, regenerative leadership",
+            'Sagittarius': "ground philosophical wisdom into actionable strategic frameworks",
+            'Capricorn': "rebuild institutional authority with spiritual integrity as the foundation",
+            'Aquarius': "channel revolutionary vision through established structures for maximum disruption",
+            'Pisces': "manifest spiritual dissolution into tangible, material-plane creation",
+        }
+        karmic_mission = f"Your Ketu in {ketu_sign} indicates a past mastery of {past_life['quality'] if 'quality' in past_life else 'the unseen'}. In 2026, your mission is to {ketu_house_missions.get(ketu_sign, 'transform inherited wisdom into decisive action')}. The {house_8_sign} 8th house demands that this transformation occurs through {house_8_sign} themes — {eighth_overlay.split('—')[-1].strip() if '—' in eighth_overlay else 'deep structural change'}."
+
         return {
             'ketu_position': {
                 'sign': ketu_sign,
@@ -289,6 +306,7 @@ class SynthesisEngine:
             'past_life_archetype': past_life['archetype'],
             'past_life_environment': past_life['environment'],
             'soul_history': past_life['soul_history'],
+            'karmic_mission': karmic_mission,
             'eighth_house_overlay': eighth_overlay,
             'pluto_depth_analysis': pluto_depth,
             'scripture_source': past_life['scripture'],

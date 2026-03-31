@@ -178,10 +178,10 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 gold-glow" style={{fontFamily: 'Playfair Display, serif'}}>
-                High-Resonance Alignment
+                Scripture-Bound Deterministic Math
               </h2>
               <p className="text-xl md:text-2xl text-[#94A3B8] mb-8 font-light">
-                Mathematical Precision | Gamified Revenue Engine
+                Ancient Wisdom | Gamified Revenue Engine
               </p>
               <p className="text-lg text-white/80 mb-12 leading-relaxed">
                 Swiss Ephemeris precision. Vedic D1-D60 charts. Western Topocentric. 
@@ -405,7 +405,7 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
         <footer className="border-t border-[#D4AF37]/20 py-8 mt-20">
           <div className="container mx-auto px-6 text-center">
             <p className="text-[#94A3B8] text-sm">
-              Swiss Ephemeris-powered. Mathematical Precision.
+              Swiss Ephemeris-powered. Scripture-Bound Deterministic Math.
             </p>
             <p className="text-[#D4AF37] text-xs mt-2" style={{fontSize: '10px'}}>
               © 2026 Zenith Oracle Enterprise
@@ -662,9 +662,9 @@ const HomeOracleTicker = () => {
         </div>
         {transits.transit_alerts?.length > 0 && (
           <div className="mt-3 text-xs text-white/40">
-            <span className="text-[#D4AF37] font-semibold">{transits.transit_alerts[0]?.title}</span>
-            <span className="mx-2 text-white/20">—</span>
-            <span className="italic">{transits.transit_alerts[0]?.message?.slice(0, 120)}...</span>
+            <span className="text-[#D4AF37] font-semibold">[LIVE]</span>
+            <span className="mx-1.5">{transits.transit_alerts[0]?.title}:</span>
+            <span className="italic">{transits.transit_alerts[0]?.message?.slice(0, 140)}...</span>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Moon, Sun, Star, Shield } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Moon, Sun, Star, Shield, Eye, Volume2, VolumeX } from 'lucide-react';
 import axios from 'axios';
 import PowerMeter from './PowerMeter';
 import OracleFeed from './OracleFeed';
@@ -238,58 +238,135 @@ const ModuleTab = ({ icon, label, active, onClick }) => (
 );
 
 const ChartDisplay = ({ chartData, activeModule, userTier }) => {
+  const [showLogic, setShowLogic] = useState(false);
+  const [toneActive, setToneActive] = useState(false);
+  const oscRef = useRef(null);
+  const ctxRef = useRef(null);
+
   if (!chartData) return null;
 
+  const SCRIPTURE_MAP = {
+    'vedic': 'Based on Brihat Parashara Hora Shastra (BPHS). Lahiri Ayanamsha as standardized by Government of India (1956).',
+    'western': 'Per Claudius Ptolemy, Tetrabiblos (2nd century CE). Tropical zodiac, Placidus house system.',
+  };
+
+  const toggleSolfeggio = () => {
+    if (toneActive && oscRef.current) {
+      oscRef.current.stop();
+      oscRef.current = null;
+      setToneActive(false);
+      return;
+    }
+    try {
+      const ctx = ctxRef.current || new (window.AudioContext || window.webkitAudioContext)();
+      ctxRef.current = ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 432;
+      osc.type = 'sine';
+      gain.gain.value = 0.08;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      oscRef.current = osc;
+      setToneActive(true);
+    } catch (e) { /* audio not supported */ }
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="glass-card rounded-2xl p-8"
-      data-testid="chart-display"
-    >
-      <h2 className="text-3xl font-bold text-white mb-6">
-        {activeModule === 'vedic' ? 'Vedic' : 'Western'} Birth Chart
-      </h2>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card rounded-2xl p-8" data-testid="chart-display">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold text-white">
+          {activeModule === 'vedic' ? 'Vedic' : 'Western'} Birth Chart
+        </h2>
+        <button onClick={toggleSolfeggio} className="flex items-center space-x-1.5 text-xs text-[#D4AF37]/70 hover:text-[#D4AF37] transition-all" data-testid="solfeggio-toggle">
+          {toneActive ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+          <span className="hidden sm:inline">432Hz</span>
+        </button>
+      </div>
 
       <div className="space-y-6">
-        {/* Chart Info */}
         <div className="grid md:grid-cols-2 gap-4">
           <InfoCard label="Ascendant" value={chartData.ascendant_sign || 'N/A'} />
-          {chartData.lunar_mansion && (
-            <InfoCard label="Lunar Mansion" value={chartData.lunar_mansion} />
-          )}
-          {chartData.dasha_lord && (
-            <InfoCard label="Dasha Regent" value={`${chartData.dasha_lord} (${chartData.dasha_balance_years?.toFixed(1)}y)`} />
-          )}
-          {chartData.power_score && (
-            <InfoCard label="Dominance Index" value={`${chartData.power_score}/100`} />
-          )}
+          {chartData.lunar_mansion && <InfoCard label="Lunar Mansion" value={chartData.lunar_mansion} />}
+          {chartData.dasha_lord && <InfoCard label="Dasha Regent" value={`${chartData.dasha_lord} (${chartData.dasha_balance_years?.toFixed(1)}y)`} />}
+          {chartData.power_score && <InfoCard label="Dominance Index" value={`${chartData.power_score}/100`} />}
         </div>
 
-        {/* Planets */}
         <div>
           <h3 className="text-xl font-bold text-white mb-4">Planetary Positions</h3>
           <div className="space-y-2">
-            {chartData.planets?.slice(0, 7).map((planet, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between items-center bg-[#020617]/40 border border-[#D4AF37]/20 rounded-lg p-3"
-              >
-                <span className="text-white font-semibold">{planet.name}</span>
-                <span className="text-[#D4AF37]">{planet.sign} {planet.degree_in_sign.toFixed(2)}</span>
-                {planet.retrograde && (
-                  <span className="text-xs text-red-400/80 ml-2">(R)</span>
-                )}
-              </div>
-            ))}
+            {chartData.planets?.slice(0, 7).map((planet, idx) => {
+              const deg = Math.floor(planet.degree_in_sign);
+              const min = Math.floor((planet.degree_in_sign - deg) * 60);
+              const sec = Math.floor(((planet.degree_in_sign - deg) * 60 - min) * 60);
+              return (
+                <div key={idx} className="flex justify-between items-center bg-[#020617]/40 border border-[#D4AF37]/20 rounded-lg p-3">
+                  <span className="text-white font-semibold">{planet.name}</span>
+                  <span className="text-[#D4AF37]">{planet.sign} {deg}&deg;{min}&prime;{sec}&Prime;</span>
+                  <span className="text-white/30 text-[10px] font-mono">{planet.longitude?.toFixed(4)}</span>
+                  {planet.retrograde && <span className="text-xs text-red-400/80 ml-2">(R)</span>}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {userTier === 'premium' && (
-          <button className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm">
-            View Full Logic
-          </button>
-        )}
+        <button
+          onClick={() => setShowLogic(!showLogic)}
+          className="w-full bg-transparent border border-[#D4AF37]/40 text-[#D4AF37] py-3 hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm font-bold flex items-center justify-center space-x-2"
+          data-testid="view-calculation-logic"
+        >
+          <Eye className="w-4 h-4" />
+          <span>View Calculation Logic</span>
+        </button>
+
+        <AnimatePresence>
+          {showLogic && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="glass-card rounded-xl p-5 border-[#D4AF37]/30 space-y-4" data-testid="calculation-logic-overlay">
+                <div>
+                  <h4 className="text-xs uppercase tracking-widest text-[#D4AF37] mb-2 font-semibold">Raw Ephemeris Data</h4>
+                  <div className="space-y-1.5">
+                    {chartData.planets?.slice(0, 7).map((p, i) => {
+                      const d = Math.floor(p.degree_in_sign);
+                      const m = Math.floor((p.degree_in_sign - d) * 60);
+                      const s = Math.floor(((p.degree_in_sign - d) * 60 - m) * 60);
+                      return (
+                        <div key={i} className="flex items-center justify-between text-xs">
+                          <span className="text-white/60 w-16">{p.name}</span>
+                          <span className="text-white font-mono">{d}&deg;{m}&prime;{s}&Prime; {p.sign}</span>
+                          <span className="text-white/20 text-[10px]">Source: JPL DE431</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase tracking-widest text-[#D4AF37] mb-2 font-semibold">The Ancient Rule</h4>
+                  <p className="text-[10px] text-white/40 italic">{SCRIPTURE_MAP[activeModule]}</p>
+                  {chartData.dasha_lord && (
+                    <p className="text-[10px] text-white/40 italic mt-1">
+                      Dasha Period: As per Vimshottari Dasha system, BPHS Ch. 46-50. Current lord: {chartData.dasha_lord}.
+                    </p>
+                  )}
+                  {chartData.ayanamsha && (
+                    <p className="text-[10px] text-white/30 mt-1">Ayanamsha (Lahiri): {chartData.ayanamsha.toFixed(6)}</p>
+                  )}
+                </div>
+                <div className="pt-2 border-t border-[#D4AF37]/10 flex items-center space-x-2">
+                  <Shield className="w-3 h-3 text-[#D4AF37]" />
+                  <span className="text-[9px] text-[#D4AF37] uppercase tracking-widest font-bold">Scripture-Bound Deterministic Math</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

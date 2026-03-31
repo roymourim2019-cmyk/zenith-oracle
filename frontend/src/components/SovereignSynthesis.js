@@ -201,6 +201,15 @@ const SovereignSynthesis = () => {
                     </p>
                   </div>
 
+                  {akashic.karmic_mission && (
+                    <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/30 rounded-xl p-4">
+                      <h5 className="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold mb-2">Karmic Mission — 2026</h5>
+                      <p className="text-sm text-white/80 leading-relaxed" data-testid="akashic-karmic-mission">
+                        {akashic.karmic_mission}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="space-y-3">
                     <h5 className="text-xs uppercase tracking-widest text-[#D4AF37]/70 font-semibold">8th House Karmic Overlay</h5>
                     <p className="text-sm text-white/60 leading-relaxed">
