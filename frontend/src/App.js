@@ -6,7 +6,7 @@ import {
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
   Users, Gift, DollarSign, Lock, ChevronRight, Globe,
   Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
-  Volume2, Crown, Eye
+  Volume2, Crown, Eye, Scroll
 } from "lucide-react";
 import "@/App.css";
 import Dashboard from "./components/Dashboard";
@@ -23,6 +23,7 @@ import OraclesTrial from "./components/OraclesTrial";
 import VortexVelocity from "./components/VortexVelocity";
 import AuraAlignment from "./components/AuraAlignment";
 import SovereignDuel from "./components/SovereignDuel";
+import SovereignSynthesis from "./components/SovereignSynthesis";
 import GlobalSuccessMap from "./components/GlobalSuccessMap";
 import BiometricVault from "./components/BiometricVault";
 import NegotiationSimulator from "./components/NegotiationSimulator";
@@ -84,6 +85,7 @@ const App = () => {
           <Route path="/vortex-velocity" element={<VortexVelocity />} />
           <Route path="/aura-alignment" element={<AuraAlignment />} />
           <Route path="/sovereign-duel" element={<SovereignDuel />} />
+          <Route path="/synthesis" element={<SovereignSynthesis />} />
         </Routes>
         <BottomNav />
         <VocalOracle />
@@ -254,6 +256,12 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
               title="Biometric Vault"
               description="FaceID/Fingerprint locked profile storage"
               link="/biometric-vault"
+            />
+            <FeatureCard
+              icon={<Scroll className="w-12 h-12 text-[#D4AF37]" />}
+              title="Scriptural Synthesis"
+              description="Cross-system verdict: Vedic + Western + Chinese + Numerology converged"
+              link="/synthesis"
             />
           </div>
         </section>
