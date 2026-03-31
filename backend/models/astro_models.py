@@ -64,16 +64,29 @@ class TarotCard(BaseModel):
     arcana: str
     suit: Optional[str] = None
     number: Optional[int] = None
+    element: Optional[str] = None
+    planet: Optional[str] = None
+    position: Optional[str] = None
     upright_meaning: str
     reversed_meaning: str
-    image_url: str
+
+class TarotPersonalization(BaseModel):
+    moon_sign: Optional[str] = None
+    dasha_lord: Optional[str] = None
+    power_score: Optional[float] = None
+    element_affinity: Optional[str] = None
 
 class TarotReading(BaseModel):
     question: str
+    reading_type: str = "general"
+    reading_name: str = "General Oracle Reading"
     spread_type: str
     cards: List[TarotCard]
+    positions: List[str] = []
     interpretation: str
-    timestamp: datetime
+    scripture: str = ""
+    personalization: Optional[TarotPersonalization] = None
+    timestamp: str
 
 class ChineseAstrology(BaseModel):
     birth_date: str
