@@ -92,6 +92,16 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 - Conflict Resolution: 4-tier system (Full Convergence/Partial/Resistance/Mixed) with % confidence
 - Data Integrity: Raw DMS longitudes with full scriptural citations (BPHS, Bhrigu Samhita, Jaimini Sutras, Tetrabiblos, Golden Dawn, Zi Ping)
 - Frontend: SovereignSynthesis.js page with accordion sections + route /synthesis + grid tile
+
+### 2026-03-31 - Authenticity Engine & Sensory Readings
+- "View Calculation Logic" button on Dashboard ChartDisplay: glassmorphic overlay with RAW EPHEMERIS DATA (DMS + JPL DE431 source) + THE ANCIENT RULE (BPHS/Tetrabiblos citations)
+- "View Calculation Logic" per Tarot card: shows arcana type, draw seed (Mersenne Twister), Golden Dawn (1888) + Book of Thoth citations
+- Replaced all '100% accurate' with 'Scripture-Bound Deterministic Math'
+- Oracle ticker [LIVE] format: "[LIVE] Moon enters Scorpio: Collective intuition levels rising..."
+- Karmic Mission 2026: Added to Akashic Echoes with sign-specific transformation guidance
+- Solfeggio ambient tones: 432Hz on Dashboard, 528Hz on Tarot Reader (Web Audio API toggles)
+- Shuffle sound effects (5 rapid triangle waves) and flip sound (800Hz sine) on Tarot Reader
+- Planetary positions now display in full DMS format (degrees°minutes'seconds") with decimal longitude
 - Replaced "100% Scientific Accuracy" with "High-Resonance Alignment" / "Mathematical Precision"
 - Added Oracle Feed live ticker on Home Screen ("COSMIC INTELLIGENCE — LIVE TRANSIT FEED")
 - Liquid Glass: backdrop-filter blur(25px) saturate(1.4) + 1px liquid gold border on all glass-card elements
