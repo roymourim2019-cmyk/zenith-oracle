@@ -19,54 +19,65 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 - Western chart calculation (Tropical/Topocentric)
 - Chinese Lunisolar astrology
 - Numerology (Chaldean, Pythagorean, Vedic)
-- Tarot reading (78+44 card deck, Mersenne Twister)
+- Tarot reading (78+44 card deck, Mersenne Twister, 5 personalized reading types)
 - **Pancha-Pakshi Oracle** (5-Bird cycle based on Natal Moon Nakshatra + Day of Week)
 - **Nakshatra Padas** (4 quarters for precision timing)
 - **Oracle Feed** (Transit Alerts, Psychic Updates, Historical Parallels)
 - Real-time planetary transit calculations
 
-### Frontend Pages & Components
+### Frontend Pages & Components (ALL INTERACTIVE)
 - Home page with Starfield, Pricing (Monthly/Yearly/Enterprise), Currency toggle
 - Sovereign 8 Dashboard with Oracle Feed sidebar
-- Vedic/Western Chart viewers
-- Chinese Astrology, Numerology Calculator
-- Tarot Reader (basic version)
+- **Vedic Chart** - Full interactive: planetary positions table, Vimshottari Dasha periods panel, Pancha-Pakshi Oracle panel with 3 tabs + View Calculation Logic
+- **Western Chart** - Full interactive: planets table, aspects panel (client-computed), 12-house cusps panel with 3 tabs + View Calculation Logic
+- **Chinese Astrology** - Full interactive: animal sign card with emoji, element/yin-yang, personality traits, compatible signs, lucky numbers/colors
+- **Numerology Calculator** - Full interactive: triple system analysis (Chaldean/Pythagorean/Vedic), archetype cards with ruling planet/mantra/vibration, lucky numbers/colors
+- **Tarot Reader** - Full interactive 3-phase experience: setup (question + reading type + spread size + optional birth data) -> card selection (21 face-down cards, pick 3-5) -> animated reveal with per-card logic overlay. 5 reading types: General/Career/Aura/Energy/Love with personalized deck weighting
 - Power Meter gauge
 - Accuracy Lab (Engine status, Delta-T, Ayanamsha)
 - Market Siege game (Numerology battle)
 - Oracle's Trial game (Tarot intuition quiz)
 - Vortex Velocity game (Planetary degree lock)
 - Aura Alignment game (Solfeggio frequency matching)
-- Biometric Vault, Negotiation Simulator, Global Success Map, Precision Alerts
-- **OracleFeed.js** - COSMIC INTELLIGENCE live ticker + Pancha-Pakshi card + 3 tab feed
+- Sovereign Duel game (Chart vs Chart)
+- **OracleFeed.js** - COSMIC INTELLIGENCE live ticker
+- **SovereignSynthesis** - Cross-system synthesis with Akashic Echoes
+- **VocalOracle** - Gemini-powered strategic briefings
 
 ### API Endpoints
 - POST /api/vedic/birth-chart
 - POST /api/vedic/dasha-periods
 - POST /api/vedic/divisional-chart/{d_number}
-- POST /api/vedic/pancha-pakshi (NEW)
-- GET /api/vedic/nakshatra-padas (NEW)
+- POST /api/vedic/pancha-pakshi
+- GET /api/vedic/nakshatra-padas
 - POST /api/western/birth-chart
 - POST /api/chinese/calculate
 - POST /api/numerology/calculate
-- POST /api/tarot/reading
-- GET /api/oracle-feed (NEW)
+- POST /api/tarot/reading (JSON body: question, num_cards 3-5, reading_type, optional birth data)
+- GET /api/oracle-feed
 - GET /api/accuracy/engine-status
 - GET /api/power-meter/{name}
 - POST /api/payment/create-order
 - POST /api/payment/verify
+- POST /api/vocal-oracle
+- POST /api/synthesis/sovereign-verdict
+- POST /api/synthesis/akashic-echoes
+- POST /api/synthesis/data-integrity
+- POST /api/synthesis/sovereign-identity
 
 ## Prioritized Backlog
 
-### P0 - In Progress
-- [ ] Advanced Tarot Reader (aura-linked, sound effects, manual card selection)
+### P0 - Completed
+- [x] Interactive Tarot Reader (5 reading types, 3-5 card manual selection, birth data personalization)
+- [x] Diversify all sections (Vedic, Western, Chinese, Numerology) with full interactive UIs
 
 ### P1
 - [ ] AdMob Rewarded Videos in War Room (Cosmic Reset on loss, Premium bypass)
 - [ ] Redis installation and proper caching
-- [ ] Alpha Daily Briefing (60-second morning audio for Premium) — backend service exists
+- [ ] Alpha Daily Briefing (60-second morning audio for Premium)
 
 ### P2
+- [ ] Refactor server.py into /routes/ directory
 - [ ] Gemini Live voice assistant full conversation mode (multi-turn)
 
 ## Changelog
@@ -75,37 +86,28 @@ Features: Freemium model with AdMob + Premium subscriptions (Razorpay), "Power M
 - Implemented Pancha-Pakshi Oracle (5-Bird cycle from Swiss Ephemeris)
 - Added Nakshatra Padas (4-quarter precision)
 - Created Oracle Feed ("COSMIC INTELLIGENCE") with transit alerts, psychic updates, historical parallels
-- Shifted tone to Strategic/Ancient voice
 - Created THE WAR ROOM: ENTERPRISE STRATEGY section with 5 game carousel
 - Created SovereignDuel.js (chart-vs-chart planet-by-planet dominance clash)
 - Wired VortexVelocity, AuraAlignment, SovereignDuel into App.js routes
-- Restored Tarot Deck to Sovereign 8 grid Tile #6
-- Added z-index 100 on War Room section, pulse animation on header
-- Added bottom navigation bar (Home/Command/Games/Tarot) on inner pages
 
 ### 2026-03-31 - Scriptural Synthesis & Akashic Engine
 - Created SynthesisEngine service with full cross-system correlation
-- getSovereignSynthesis(): Correlates Vedic Dasha↔Numerology↔Tarot (Saturn→8→The Hermit/The World)
-- Akashic Echoes: Past Life analysis via Ketu + 8th House (Vedic) + Pluto (Western) using Bhrigu Nadi method
-- Sovereign Identity: Unified BaZi Element + Western Rising + Vedic Nakshatra signature
-- Daily Strategic Window: Combines Dasha + Transits + Universal Day Number with Muhurta timing
-- Conflict Resolution: 4-tier system (Full Convergence/Partial/Resistance/Mixed) with % confidence
-- Data Integrity: Raw DMS longitudes with full scriptural citations (BPHS, Bhrigu Samhita, Jaimini Sutras, Tetrabiblos, Golden Dawn, Zi Ping)
-- Frontend: SovereignSynthesis.js page with accordion sections + route /synthesis + grid tile
+- Akashic Echoes: Past Life analysis via Ketu + 8th House
+- Sovereign Identity: Unified BaZi Element + Western Rising + Vedic Nakshatra
+- Daily Strategic Window: Combines Dasha + Transits + Universal Day Number
 
 ### 2026-03-31 - Authenticity Engine & Sensory Readings
-- "View Calculation Logic" button on Dashboard ChartDisplay: glassmorphic overlay with RAW EPHEMERIS DATA (DMS + JPL DE431 source) + THE ANCIENT RULE (BPHS/Tetrabiblos citations)
-- "View Calculation Logic" per Tarot card: shows arcana type, draw seed (Mersenne Twister), Golden Dawn (1888) + Book of Thoth citations
-- Replaced all '100% accurate' with 'Scripture-Bound Deterministic Math'
-- Oracle ticker [LIVE] format: "[LIVE] Moon enters Scorpio: Collective intuition levels rising..."
-- Karmic Mission 2026: Added to Akashic Echoes with sign-specific transformation guidance
-- Solfeggio ambient tones: 432Hz on Dashboard, 528Hz on Tarot Reader (Web Audio API toggles)
-- Shuffle sound effects (5 rapid triangle waves) and flip sound (800Hz sine) on Tarot Reader
-- Planetary positions now display in full DMS format (degrees°minutes'seconds") with decimal longitude
-- Replaced "100% Scientific Accuracy" with "High-Resonance Alignment" / "Mathematical Precision"
-- Added Oracle Feed live ticker on Home Screen ("COSMIC INTELLIGENCE — LIVE TRANSIT FEED")
-- Liquid Glass: backdrop-filter blur(25px) saturate(1.4) + 1px liquid gold border on all glass-card elements
-- Gyroscope Parallax: DeviceOrientation API (mobile) + mouse parallax (desktop) on Starfield
-- 528Hz Solfeggio success tone (Web Audio API) + haptic vibration pattern on Aura Alignment achievement
-- Created Vocal Oracle: floating Gemini-powered button (gemini-3-flash-preview) for strategic briefings with Web Speech API text-to-speech
-- Updated bottom nav to [Oracle | Matrix | War Room | Profile]
+- "View Calculation Logic" overlays with raw ephemeris data + scripture citations
+- Solfeggio ambient tones: 432Hz on Dashboard, 528Hz on Tarot Reader
+- Liquid Glass: backdrop-filter blur(25px) saturate(1.4)
+- Gyroscope Parallax Starfield
+- Created Vocal Oracle: Gemini-powered strategic briefings
+
+### 2026-04-01 - Interactive Tarot Module & Section Diversification
+- **Tarot Module Overhaul**: Rebuilt as 3-phase interactive experience (setup -> card selection -> animated reveal). 5 reading types (General/Career/Aura/Energy/Love) with personalized deck weighting via Moon sign + Dasha Lord resonance. Per-card "View Calculation Logic" overlays. Updated Pydantic models and backend endpoint to support JSON body with optional birth data.
+- **Vedic Chart Page**: Full interactive page with form, 3-tab results (Planetary Positions table with DMS/speed/retro, Vimshottari Dasha timeline, Pancha-Pakshi Oracle panel), View Calculation Logic. All data from Swiss Ephemeris.
+- **Western Chart Page**: Full interactive page with form, 3-tab results (Planets table, Aspects panel with harmony/challenge labels, 12-House cusps), View Calculation Logic. Client-computed aspects from real longitudes.
+- **Chinese Astrology Page**: Full interactive page with animal sign card (emoji, element badge, yin-yang), personality traits, compatible signs, lucky numbers/colors. Per Zi Ping Ba Zi system.
+- **Numerology Calculator Page**: Full interactive page with triple-system analysis (Chaldean/Pythagorean/Vedic), archetype cards (ruling planet, mantra, vibration), lucky numbers/colors, interpretation. Per ancient tradition (Babylon 4000 BCE, Greece 530 BCE, India 1500 BCE).
+- All pages maintain Obsidian + Metallic Gold theme with Liquid Glass glass-card styling and "Scripture-Bound Deterministic Math" badges.
+- **Testing**: iteration_7 (Tarot 100%), iteration_8 (All 4 sections 100%, Tarot regression passed)
