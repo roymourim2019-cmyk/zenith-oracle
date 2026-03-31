@@ -259,7 +259,7 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
         </section>
 
         {/* WAR ROOM: ENTERPRISE STRATEGY */}
-        <section className="container mx-auto px-6 py-20 relative" style={{ zIndex: 100 }} id="war-room" data-testid="war-room-section">
+        <section className="container mx-auto px-6 py-20 relative" style={{ zIndex: 100, overflow: 'visible', height: 'auto' }} id="war-room" data-testid="war-room-section">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -278,7 +278,7 @@ const Home = ({ userTier, setUserTier, setShowPayment, currency, setCurrency }) 
             </p>
           </motion.div>
 
-          <div className="war-room-carousel flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible">
+          <div className="flex flex-wrap justify-center gap-6" style={{ overflow: 'visible', minHeight: 'auto' }}>
             <GameCard
               icon={<TrendingUp className="w-10 h-10 text-[#D4AF37]" />}
               title="Market Siege"
@@ -536,7 +536,7 @@ const GameCard = ({ icon, title, description, link, badge, index }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: index * 0.08 }}
-    className="glass-card rounded-2xl p-6 min-w-[280px] snap-center border-[#D4AF37]/40 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all duration-300 block cursor-pointer group"
+    className="glass-card rounded-2xl p-6 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] border-[#D4AF37]/40 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all duration-300 block cursor-pointer group"
     data-testid={`game-card-${title.toLowerCase().replace(/\s+/g, '-')}`}
   >
     <div className="flex items-center justify-between mb-4">
