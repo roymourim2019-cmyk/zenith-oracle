@@ -1,10 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ChevronRight, MapPin } from 'lucide-react';
 
 const OnboardingFlow = ({ onComplete }) => {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({ name: '', birth_date: '', birth_time: '', latitude: '', longitude: '' });
+  const [detectedCity, setDetectedCity] = useState('Kolkata');
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          setFormData(p => ({ ...p, latitude: pos.coords.latitude.toFixed(4), longitude: pos.coords.longitude.toFixed(4) }));
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
+            const data = await res.json();
+            const city = data.address?.city || data.address?.town || data.address?.state || 'your location';
+            setDetectedCity(city);
+          } catch (e) {}
+        },
+        () => {}
+      );
+    }
+  }, []);
 
   const detectLocation = () => {
     if (!navigator.geolocation) return;
@@ -98,9 +116,36 @@ const OnboardingFlow = ({ onComplete }) => {
         <AnimatePresence mode="wait">
           <motion.div key={step} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="glass-card rounded-2xl p-6 sm:p-8">
             <div className="text-center mb-6">
-              <Sparkles className="w-8 h-8 text-[#D4AF37] mx-auto mb-3 liquid-gold-animation" />
-              <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>{current.title}</h2>
-              <p className="text-sm text-white/40 mt-1">{current.subtitle}</p>
+              {step === 0 ? (
+                <>
+                  <motion.img
+                    src="/assets/zenith-oracle-logo.png"
+                    alt="Zenith Oracle"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-32 h-32 mx-auto mb-4 rounded-2xl object-contain"
+                    data-testid="onboard-logo"
+                  />
+                  <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>{current.title}</h2>
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-sm text-[#D4AF37]/80 mt-2 italic"
+                    data-testid="onboard-connection-msg"
+                  >
+                    The Oracle has recognized your connection from {detectedCity}.
+                  </motion.p>
+                  <p className="text-xs text-white/30 mt-1">{current.subtitle}</p>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-8 h-8 text-[#D4AF37] mx-auto mb-3 liquid-gold-animation" />
+                  <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>{current.title}</h2>
+                  <p className="text-sm text-white/40 mt-1">{current.subtitle}</p>
+                </>
+              )}
             </div>
             {current.content}
           </motion.div>
