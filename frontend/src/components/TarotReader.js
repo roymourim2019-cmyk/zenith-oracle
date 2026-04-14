@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, RefreshCw, Eye, Shield, Volume2, VolumeX, ChevronDown, Heart, Briefcase, Flame, Zap, Sun } from 'lucide-react';
 import axios from 'axios';
 
+import { AdBanner } from './AdComponents';
+import { ShareButton } from './ShareCard';
+
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const READING_TYPES = [
@@ -515,14 +518,18 @@ const TarotReader = () => {
                   </div>
 
                   {/* New Reading */}
-                  <button
-                    onClick={resetAll}
-                    className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm"
-                    data-testid="new-reading-button"
-                  >
-                    <RefreshCw className="w-4 h-4 inline mr-2" />
-                    New Reading
-                  </button>
+                  <div className="flex gap-3">
+                    <ShareButton title="Tarot Reading" text={`My ${reading.reading_name}: "${reading.interpretation?.slice(0, 100)}..." Get yours on Zenith Oracle!`} />
+                    <button
+                      onClick={resetAll}
+                      className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm"
+                      data-testid="new-reading-button"
+                    >
+                      <RefreshCw className="w-4 h-4 inline mr-2" />
+                      New Reading
+                    </button>
+                  </div>
+                  <AdBanner slot="tarot-result" className="mt-4" />
                 </motion.div>
               )}
             </motion.div>

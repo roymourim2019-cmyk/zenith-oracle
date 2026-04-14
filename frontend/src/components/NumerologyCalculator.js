@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Hash, Shield, Eye, Sparkles, Star } from 'lucide-react';
-import axios from 'axios';
+import { AdBanner } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -151,9 +152,13 @@ const NumerologyCalculator = () => {
               </AnimatePresence>
             </div>
 
-            <button onClick={() => setResult(null)} className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="numerology-new-calc">
-              New Calculation
-            </button>
+            <AdBanner slot="numerology-result" className="mb-4" />
+            <div className="flex gap-3">
+              <ShareButton title="Numerology Profile" text={`My numbers: Chaldean ${result.chaldean_number}, Pythagorean ${result.pythagorean_number}, Vedic ${result.vedic_number}. Discover yours on Zenith Oracle!`} />
+              <button onClick={() => setResult(null)} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="numerology-new-calc">
+                New Calculation
+              </button>
+            </div>
           </div>
         )}
       </div>

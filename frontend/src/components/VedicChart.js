@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Moon, Sun, Star, Shield, Eye, Sparkles, ChevronDown, Activity } from 'lucide-react';
-import axios from 'axios';
+import { AdBanner } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -219,9 +220,13 @@ const VedicChart = ({ userTier }) => {
             )}
 
             {/* New Calculation */}
-            <button onClick={() => { setChart(null); setDasha(null); setPakshi(null); setActiveTab('chart'); setShowLogic(false); }} className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="vedic-new-calc">
-              New Calculation
-            </button>
+            <AdBanner slot="vedic-result" className="mb-4" />
+            <div className="flex gap-3">
+              <ShareButton title="Vedic Birth Chart" text={`My Vedic Chart: ${chart.ascendant_sign} Rising, Power Score ${chart.power_score}/100, ${chart.dasha_lord} Dasha. Get yours on Zenith Oracle!`} />
+              <button onClick={() => { setChart(null); setDasha(null); setPakshi(null); setActiveTab('chart'); setShowLogic(false); }} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="vedic-new-calc">
+                New Calculation
+              </button>
+            </div>
           </div>
         )}
       </div>

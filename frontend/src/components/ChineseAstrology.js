@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Shield, Star, Heart, Users } from 'lucide-react';
-import axios from 'axios';
+import { AdBanner } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -142,9 +143,13 @@ const ChineseAstrology = () => {
               <p className="text-[10px] text-white/30 mt-1">Chinese Lunisolar calendar computation (1900-2100). Animal sign = (Year - 1900) mod 12. Element = (Year - 1900) mod 10 / 2. Per Zi Ping Ba Zi system.</p>
             </div>
 
-            <button onClick={() => setResult(null)} className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="chinese-new-calc">
-              New Calculation
-            </button>
+            <AdBanner slot="chinese-result" className="mb-4" />
+            <div className="flex gap-3">
+              <ShareButton title="Chinese Zodiac" text={`I'm a ${result.element} ${result.animal_sign} (${result.yin_yang})! Check your Chinese zodiac on Zenith Oracle`} />
+              <button onClick={() => setResult(null)} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="chinese-new-calc">
+                New Calculation
+              </button>
+            </div>
           </div>
         )}
       </div>

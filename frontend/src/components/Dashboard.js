@@ -9,7 +9,7 @@ import HapticSignature from '../utils/HapticSignature';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const Dashboard = ({ userTier, setShowPayment }) => {
+const Dashboard = () => {
   const [activeModule, setActiveModule] = useState('vedic');
   const [birthInfo, setBirthInfo] = useState(null);
   const [chartData, setChartData] = useState(null);

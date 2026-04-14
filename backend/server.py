@@ -17,7 +17,6 @@ from services.western_service import WesternAstrologyService
 from services.chinese_service import ChineseAstrologyService
 from services.numerology_service import NumerologyService
 from services.tarot_service import TarotService
-from services.payment_service import PaymentService
 from services.gemini_service import GeminiService
 from services.synthesis_engine import SynthesisEngine
 from pydantic import Field as PydanticField
@@ -34,7 +33,8 @@ western_service = WesternAstrologyService()
 chinese_service = ChineseAstrologyService()
 numerology_service = NumerologyService()
 tarot_service = TarotService()
-payment_service = PaymentService()
+
+# Removed: payment_service (app is now free + ad-supported)
 gemini_service = GeminiService()
 synthesis_engine = SynthesisEngine()
 
@@ -331,63 +331,6 @@ async def get_tarot_reading(req: TarotReadingRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Tarot reading failed: {str(e)}")
-
-
-@api_router.post("/payment/create-order")
-async def create_payment_order(
-    order: PaymentOrder,
-    user_tier: str = Depends(get_user_tier)
-):
-    try:
-        razorpay_order = payment_service.create_order(
-            amount=order.amount,
-            currency=order.currency,
-            receipt=order.receipt
-        )
-        
-        await db.payment_orders.insert_one({
-            "razorpay_order_id": razorpay_order['id'],
-            "amount": order.amount,
-            "currency": order.currency,
-            "status": "created",
-            "created_at": datetime.now(timezone.utc).isoformat()
-        })
-        
-        return razorpay_order
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Order creation failed: {str(e)}")
-
-
-@api_router.post("/payment/verify")
-async def verify_payment(
-    razorpay_order_id: str,
-    razorpay_payment_id: str,
-    razorpay_signature: str
-):
-    try:
-        is_valid = payment_service.verify_payment(
-            razorpay_order_id,
-            razorpay_payment_id,
-            razorpay_signature
-        )
-        
-        if is_valid:
-            await db.payment_orders.update_one(
-                {"razorpay_order_id": razorpay_order_id},
-                {"$set": {
-                    "status": "completed",
-                    "razorpay_payment_id": razorpay_payment_id,
-                    "completed_at": datetime.now(timezone.utc).isoformat()
-                }}
-            )
-            
-            return {"status": "verified", "payment_id": razorpay_payment_id}
-        else:
-            raise HTTPException(status_code=400, detail="Payment verification failed")
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Payment verification error: {str(e)}")
 
 
 @api_router.post("/ai/chart-insights")

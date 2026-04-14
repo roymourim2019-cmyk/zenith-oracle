@@ -1,0 +1,27 @@
+{
+  "short_name": "Zenith Oracle",
+  "name": "Zenith Oracle - Cosmic Intelligence",
+  "description": "Scripture-Bound Deterministic Math. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#020617",
+  "background_color": "#020617",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "entertainment", "education"],
+  "lang": "en",
+  "dir": "ltr"
+}

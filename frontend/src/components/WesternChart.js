@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Shield, Eye, Sparkles } from 'lucide-react';
-import axios from 'axios';
+import { AdBanner } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -241,9 +242,13 @@ const WesternChart = ({ userTier }) => {
               </AnimatePresence>
             </div>
 
-            <button onClick={() => { setChart(null); setShowLogic(false); setActiveView('planets'); }} className="w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="western-new-calc">
-              New Calculation
-            </button>
+            <AdBanner slot="western-result" className="mb-4" />
+            <div className="flex gap-3">
+              <ShareButton title="Western Chart" text={`My Western Chart: ${chart.ascendant_sign} Rising, Midheaven in ${chart.midheaven_sign}. Get yours on Zenith Oracle!`} />
+              <button onClick={() => { setChart(null); setShowLogic(false); setActiveView('planets'); }} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest font-bold text-sm" data-testid="western-new-calc">
+                New Calculation
+              </button>
+            </div>
           </div>
         )}
       </div>

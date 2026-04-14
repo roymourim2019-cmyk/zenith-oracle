@@ -244,3 +244,25 @@
   transition: transform 0.15s ease-out;
   will-change: transform;
 }
+
+
+/* Ad progress animation */
+@keyframes adProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Constellation loading animation */
+@keyframes constellationPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.constellation-loading span {
+  display: inline-block;
+  animation: constellationPulse 1.5s ease-in-out infinite;
+}
+.constellation-loading span:nth-child(2) { animation-delay: 0.2s; }
+.constellation-loading span:nth-child(3) { animation-delay: 0.4s; }
+.constellation-loading span:nth-child(4) { animation-delay: 0.6s; }
+.constellation-loading span:nth-child(5) { animation-delay: 0.8s; }
