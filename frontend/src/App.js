@@ -250,7 +250,7 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
             <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3" style={{fontFamily: 'Playfair Display, serif'}}>
               The <span className="text-[#D4AF37]">Sovereign Matrix</span>
             </h3>
-            <p className="text-sm text-white/40">Nine modules of cosmic intelligence — all free, forever</p>
+            <p className="text-sm text-white/40">Ten modules of cosmic intelligence — all free, forever</p>
           </div>
           <div className="sovereign-grid">
             <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Daily Oracle" description="Free daily horoscope + Card of the Day. Unlock extended Career/Love/Health insights." link="/daily" isNew />

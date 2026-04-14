@@ -1,81 +1,68 @@
 # Zenith Oracle - Product Requirements Document
 
 ## Original Problem Statement
-A 100% Scientific Accuracy Astrology platform with a High-Ticket Aesthetic (Obsidian #020617 & Metallic Gold #D4AF37). 100% FREE with ad-supported revenue model. Optimized for Play Store/App Store downloads.
-Modules: Vedic (Lahiri Ayanamsha), Western (Topocentric), Chinese Lunisolar, Numerology, Tarot, Compatibility Checker.
-Features: PWA installable, Onboarding flow, Daily streak system, Share reading cards, Ad banners, "War Room" for 5 enterprise strategy games.
+A 100% Scientific Accuracy Astrology platform with High-Ticket Aesthetic (Obsidian #020617 & Metallic Gold #D4AF37). **100% FREE** with aggressive ad-supported revenue model optimized for Play Store/App Store downloads.
 
-## Revenue Model
-- **100% Free** — No payments, no premium tiers, no locked features
-- **Ad Revenue**: AdMob banner ads on result pages, interstitial ads between sessions, rewarded video ads in War Room
-- **Downloads**: PWA install prompt, App Store/Play Store optimized
-- **Virality**: Share reading buttons, Compatibility Checker (invite friends)
+## Revenue Model (Ad-First Strategy)
+1. **Rewarded Video Ads** (Highest CPM $10-50): Unlock extended Daily Oracle reading (Career/Love/Health/Wealth). War Room Cosmic Reset.
+2. **Interstitial Ads** (High CPM $5-15): Between reading sessions.
+3. **Native Banner Ads** (Consistent CPM $1-3): Gold-themed "Sponsored by the Cosmos" on every result page.
+4. **Viral Growth Loop**: Compatibility Checker (invite friends) + Share Reading buttons on all results.
+5. **Daily Engagement**: Daily Oracle page brings users back every day = daily ad impressions.
 
 ## Architecture
 - **Frontend**: React + Tailwind CSS + Framer Motion + Glassmorphism UI
-- **Backend**: Python FastAPI + PySwisseph (Swiss Ephemeris) for astronomical calculations
-- **Database**: MongoDB (via Motor async driver)
-- **Cache**: Redis (currently mocked/bypassed)
-- **Styling**: Obsidian (#020617) background, Metallic Gold (#D4AF37) accents, Playfair Display headings
+- **Backend**: Python FastAPI + PySwisseph (Swiss Ephemeris) + MongoDB
+- **PWA**: manifest.json, app icons, standalone display, installable
 
-## What's Been Implemented
+## Modules (10 Total)
+1. **Daily Oracle** - Daily horoscope + Card of the Day + ad-gated extended reading (Career/Love/Health/Wealth)
+2. **Vedic Zenith** - D1-D60 charts, Vimshottari Dasha, Pancha-Pakshi Oracle
+3. **Western Zenith** - Tropical zodiac, Placidus houses, planetary aspects
+4. **Tarot Oracle** - 78+44 cards, 5 reading types, personalized deck weighting
+5. **Numerology Vault** - Chaldean/Pythagorean/Vedic triple-system analysis
+6. **Chinese Oracle** - Lunisolar zodiac, Five Elements, Yin-Yang
+7. **Compatibility Checker** - Cross-system partner match (Moon+Dasha+Numerology+Chinese)
+8. **Power Meter** - 0-100% dominance gauge from real-time transits
+9. **Scriptural Synthesis** - Cross-system verdict with Akashic Echoes
+10. **Accuracy Lab** - Engine status, Delta-T, Ayanamsha monitoring
 
-### Revenue & Growth Features
-- **Ad Banners**: Gold-themed AdMob banners on all result pages (AdMob test IDs)
-- **Onboarding Flow**: 3-step first-time experience (Name → Birth Date/Time → Location)
-- **Daily Streak**: "1 day" streak counter with best record tracking
-- **Social Proof**: "10,000+ readings | 4.9 Rating | 100% Free" on home
-- **Share Reading**: One-click share buttons on all section results (Web Share API + clipboard fallback)
-- **PWA**: manifest.json, app icons (192px/512px), apple-touch-icon, standalone display mode
-- **Rating Prompt**: Shows after 5 readings completed
-- **Install Banner**: "Add to Home Screen" prompt for PWA installation
-- **Compatibility Checker**: Cross-system partner match (viral feature for friend invites)
+## War Room (5 Strategy Games)
+- Market Siege, Oracle's Trial, Vortex Velocity, Aura Alignment, Sovereign Duel
 
-### Core Astrology Engine (Backend)
-- Vedic birth chart (D1-D60 divisional, Vimshottari Dasha, Pancha-Pakshi)
-- Western chart (Tropical/Topocentric, Placidus houses)
-- Chinese Lunisolar astrology
-- Numerology (Chaldean, Pythagorean, Vedic)
-- Tarot reading (78+44 cards, 5 personalized reading types)
-- Oracle Feed (Transit Alerts, Psychic Updates)
-- Scriptural Synthesis (Cross-system correlation)
-- Akashic Echoes (Past life profiling)
+## Growth Features
+- Onboarding Flow (3-step: Name → DOB → Location)
+- Daily Streak System with badges
+- Social Proof counters
+- Share Reading buttons on all section results
+- PWA Install Banner
+- Rating Prompt after 5 readings
 
-### Frontend Pages (ALL INTERACTIVE)
-- Home: Starfield, hero, Sovereign Matrix (9 modules), War Room (5 games), ad banners
-- Vedic Chart: Planet table + Dasha timeline + Pancha-Pakshi (3 tabs)
-- Western Chart: Planets + Aspects + Houses (3 tabs)
-- Chinese Astrology: Animal sign card with element/yin-yang
-- Numerology: Triple-system archetype analysis
-- Tarot Reader: 3-phase interactive (setup → select → reveal)
-- Compatibility Checker: 2-person form, 4 cross-system scores + overall
-- Power Meter, Accuracy Lab, 5 War Room Games
-- Vocal Oracle (Gemini), Scriptural Synthesis
-
-### API Endpoints
+## API Endpoints
+- GET /api/daily-oracle, GET /api/daily-tarot-card
 - POST /api/vedic/birth-chart, dasha-periods, pancha-pakshi, divisional-chart
 - POST /api/western/birth-chart
 - POST /api/chinese/calculate
 - POST /api/numerology/calculate
 - POST /api/tarot/reading (5 types, personalized)
 - GET /api/oracle-feed, /api/accuracy/engine-status, /api/power-meter/{name}
-- POST /api/vocal-oracle, /api/synthesis/* 
-- **REMOVED**: /api/payment/create-order, /api/payment/verify
+- POST /api/vocal-oracle, /api/synthesis/*
+- **REMOVED**: /api/payment/*
 
 ## Prioritized Backlog
-
 ### P0 - Completed
-- [x] Interactive Tarot Reader
-- [x] Diversify all sections with full interactive UIs
-- [x] Remove all payment modes, switch to free + ad model
-- [x] Onboarding flow, streak, share, ads, PWA, compatibility checker
+- [x] All 10 modules with full interactive UIs
+- [x] Free + ad model (no payments)
+- [x] Daily Oracle with rewarded video ad gate
+- [x] Onboarding, streak, share, PWA, compatibility
+- [x] Ad banners on all result pages
 
 ### P1
-- [ ] Redis installation and proper caching for transit data
-- [ ] AdMob Rewarded Videos in War Room (Cosmic Reset on game loss)
+- [ ] Redis installation for transit caching
+- [ ] War Room Cosmic Reset rewarded video ads
 - [ ] Alpha Daily Briefing (60-sec morning audio)
 
 ### P2
-- [ ] Refactor server.py into /routes/ directory
-- [ ] Offline support (cache last readings via service worker)
-- [ ] Push notifications for daily oracle digest
+- [ ] Refactor server.py into /routes/
+- [ ] Service worker for offline support
+- [ ] Push notifications for daily digest
