@@ -1,39 +1,18 @@
 {
-  "short_name": "Zenith Oracle",
+  "id": "zenith-oracle-app",
   "name": "Zenith Oracle - Cosmic Intelligence",
+  "short_name": "Zenith Oracle",
   "description": "Scripture-Bound Deterministic Math. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris.",
   "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#020617",
-  "background_color": "#020617",
-  "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "categories": ["lifestyle", "entertainment", "education"],
-  "lang": "en",
-  "dir": "ltr"
-}
-{
-  "name": "Zenith Oracle - Cosmic Intelligence",
-  "short_name": "Zenith Oracle",
-  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
-  "background_color": "#050505",
+  "orientation": "portrait",
   "theme_color": "#050505",
-  "description": "Scripture-Bound Deterministic Math. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris.",
+  "background_color": "#050505",
+  "categories": ["lifestyle", "entertainment", "education"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/assets/zenith-oracle-logo.png",
@@ -42,7 +21,5 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
-  "id": "zenith-oracle-app",
-  "scope": "/"
+  "screenshots": []
 }
