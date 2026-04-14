@@ -229,3 +229,32 @@ class TarotService:
             'Pentacles': 'material, finances, career' if upright else 'financial loss'
         }
         return f"{rank}: {suit_meanings.get(suit, 'transformation')}"
+
+    def draw_daily_card(self, seed: int) -> dict:
+        """Return a single deterministic card of the day based on date seed"""
+        rng = random.Random(seed)
+        all_cards = list(self.MAJOR_ARCANA) + list(self.ALPHA_STRATEGY_CARDS)
+        card_data = rng.choice(all_cards)
+        upright = rng.random() > 0.3
+
+        daily_messages = {
+            'Fire': 'Take bold action today. Your initiative will be rewarded.',
+            'Water': 'Trust your intuition. Emotional clarity guides your path.',
+            'Air': 'Communicate your ideas. Mental agility is your strength.',
+            'Earth': 'Build something lasting today. Patience yields prosperity.',
+        }
+
+        meaning_text = card_data.get('upright', '') if upright else card_data.get('reversed', '')
+        if not meaning_text:
+            meaning_text = card_data.get('meaning', card_data.get('strategic_meaning', 'Cosmic insight awaits'))
+
+        return {
+            'name': card_data.get('name', card_data.get('rank', 'Unknown')),
+            'arcana': 'Major' if 'number' in card_data and card_data.get('number', 99) <= 21 else ('Alpha Strategy' if 'strategic_meaning' in card_data else 'Minor'),
+            'element': card_data.get('element', 'Earth'),
+            'planet': card_data.get('planet', ''),
+            'upright': upright,
+            'meaning': meaning_text,
+            'daily_guidance': daily_messages.get(card_data.get('element', 'Fire'), daily_messages['Fire']),
+            'scripture': 'Card of the Day selected via seeded Mersenne Twister (MT19937) keyed to UTC date. Correspondences per Golden Dawn tradition.',
+        }

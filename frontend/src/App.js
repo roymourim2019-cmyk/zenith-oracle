@@ -30,6 +30,7 @@ import PrecisionAlerts from "./components/PrecisionAlerts";
 import VocalOracle from "./components/VocalOracle";
 import CompatibilityChecker from "./components/CompatibilityChecker";
 import OnboardingFlow from "./components/OnboardingFlow";
+import DailyOracle from "./components/DailyOracle";
 import { AdBanner } from "./components/AdComponents";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
 
@@ -72,6 +73,7 @@ const App = () => {
             />
           } />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/daily" element={<DailyOracle />} />
           <Route path="/vedic" element={<VedicChart />} />
           <Route path="/western" element={<WesternChart />} />
           <Route path="/chinese" element={<ChineseAstrology />} />
@@ -203,16 +205,21 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="/dashboard">
-                  <button className="oracle-button text-white font-bold py-4 px-12 text-base uppercase tracking-widest" data-testid="enter-oracle-button">
-                    Enter the Oracle
+                <a href="/daily">
+                  <button className="oracle-button text-white font-bold py-4 px-12 text-base uppercase tracking-widest" data-testid="daily-oracle-button">
+                    Today's Oracle
                     <ChevronRight className="inline ml-2 w-6 h-6" />
                   </button>
                 </a>
+                <a href="/dashboard">
+                  <button className="border border-[#D4AF37]/40 text-[#D4AF37] font-bold py-4 px-8 text-sm uppercase tracking-widest rounded-xl hover:bg-[#D4AF37]/10 transition-all" data-testid="enter-oracle-button">
+                    Full Oracle Matrix
+                  </button>
+                </a>
                 <a href="/compatibility">
-                  <button className="border border-[#D4AF37]/40 text-[#D4AF37] font-bold py-4 px-8 text-sm uppercase tracking-widest rounded-xl hover:bg-[#D4AF37]/10 transition-all" data-testid="compatibility-cta">
+                  <button className="border border-white/20 text-white/60 font-bold py-4 px-8 text-sm uppercase tracking-widest rounded-xl hover:bg-white/5 transition-all" data-testid="compatibility-cta">
                     <Heart className="inline mr-2 w-4 h-4" />
-                    Check Compatibility
+                    Compatibility
                   </button>
                 </a>
               </div>
@@ -246,6 +253,7 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
             <p className="text-sm text-white/40">Nine modules of cosmic intelligence — all free, forever</p>
           </div>
           <div className="sovereign-grid">
+            <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Daily Oracle" description="Free daily horoscope + Card of the Day. Unlock extended Career/Love/Health insights." link="/daily" isNew />
             <FeatureCard icon={<Moon className="w-10 h-10 text-[#D4AF37]" />} title="Vedic Zenith" description="D1-D60 divisional charts, Vimshottari Dasha, Pancha-Pakshi Oracle" link="/vedic" />
             <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Western Zenith" description="Tropical zodiac, Placidus houses, planetary aspects analysis" link="/western" />
             <FeatureCard icon={<Sparkles className="w-10 h-10 text-[#D4AF37]" />} title="Tarot Oracle" description="78+44 cards, 5 reading types, personalized deck weighting" link="/tarot" />
@@ -424,8 +432,8 @@ const BottomNav = () => {
   if (location.pathname === '/') return null;
 
   const navItems = [
+    { icon: <Sun className="w-5 h-5" />, label: 'Daily', path: '/daily' },
     { icon: <Eye className="w-5 h-5" />, label: 'Oracle', path: '/dashboard' },
-    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Matrix', path: '/' },
     { icon: <Heart className="w-5 h-5" />, label: 'Match', path: '/compatibility' },
     { icon: <Swords className="w-5 h-5" />, label: 'War Room', path: '/#war-room' },
   ];
