@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Trophy, TrendingUp, Clock, Play, Award } from 'lucide-react';
 import axios from 'axios';
+import { AdBanner, AdRewarded } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -18,6 +20,7 @@ const MarketSiege = () => {
   const [result, setResult] = useState(null);
   const [showAd, setShowAd] = useState(false);
   const [adCountdown, setAdCountdown] = useState(5);
+  const [showCosmicReset, setShowCosmicReset] = useState(false);
 
   const opponents = [
     { name: 'Alexander Magnus', date: '1985-07-23' },
@@ -157,10 +160,13 @@ const MarketSiege = () => {
               playerName={playerName}
               opponentName={opponentName}
               playAgain={playAgain}
+              showCosmicReset={showCosmicReset}
+              setShowCosmicReset={setShowCosmicReset}
             />
           )}
         </AnimatePresence>
       </div>
+      <AdRewarded show={showCosmicReset} onReward={() => { setShowCosmicReset(false); startGame(); }} onClose={() => setShowCosmicReset(false)} />
     </div>
   );
 };
@@ -284,7 +290,7 @@ const AdScreen = ({ countdown }) => (
   </motion.div>
 );
 
-const ResultScreen = ({ result, playerName, opponentName, playAgain }) => (
+const ResultScreen = ({ result, playerName, opponentName, playAgain, showCosmicReset, setShowCosmicReset }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -328,13 +334,29 @@ const ResultScreen = ({ result, playerName, opponentName, playAgain }) => (
       </div>
     )}
 
-    <button
-      onClick={playAgain}
-      className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] transition-all uppercase tracking-widest"
-      data-testid="play-again-button"
-    >
-      Battle Again
-    </button>
+    <AdBanner slot="market-siege-result" className="mb-4" />
+
+    <div className="space-y-3">
+      {result.winner === 'opponent' && (
+        <button
+          onClick={() => setShowCosmicReset(true)}
+          className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all uppercase tracking-widest text-sm"
+          data-testid="cosmic-reset-btn"
+        >
+          Cosmic Reset — Watch & Retry
+        </button>
+      )}
+      <div className="flex gap-3">
+        <ShareButton title="Market Siege" text={`I scored ${result.winner === 'player' ? result.points + ' points in' : 'a fierce battle at'} Market Siege on Zenith Oracle!`} />
+        <button
+          onClick={playAgain}
+          className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-bold py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm"
+          data-testid="play-again-button"
+        >
+          Battle Again
+        </button>
+      </div>
+    </div>
   </motion.div>
 );
 

@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
-  Users, ChevronRight, Globe, Hash,
+  Users, ChevronRight, Globe, Hash, Mic,
   Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
   Volume2, Crown, Eye, Scroll, Heart, Download, X, Flame
 } from "lucide-react";
@@ -31,6 +31,7 @@ import VocalOracle from "./components/VocalOracle";
 import CompatibilityChecker from "./components/CompatibilityChecker";
 import OnboardingFlow from "./components/OnboardingFlow";
 import DailyOracle from "./components/DailyOracle";
+import AlphaBriefing from "./components/AlphaBriefing";
 import { AdBanner } from "./components/AdComponents";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
 
@@ -74,6 +75,7 @@ const App = () => {
           } />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/daily" element={<DailyOracle />} />
+          <Route path="/alpha-briefing" element={<AlphaBriefing />} />
           <Route path="/vedic" element={<VedicChart />} />
           <Route path="/western" element={<WesternChart />} />
           <Route path="/chinese" element={<ChineseAstrology />} />
@@ -254,6 +256,7 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
           </div>
           <div className="sovereign-grid">
             <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Daily Oracle" description="Free daily horoscope + Card of the Day. Unlock extended Career/Love/Health insights." link="/daily" isNew />
+            <FeatureCard icon={<Mic className="w-10 h-10 text-[#D4AF37]" />} title="Alpha Briefing" description="60-second AI morning strategy audio. Real transits + Gemini intelligence." link="/alpha-briefing" isNew />
             <FeatureCard icon={<Moon className="w-10 h-10 text-[#D4AF37]" />} title="Vedic Zenith" description="D1-D60 divisional charts, Vimshottari Dasha, Pancha-Pakshi Oracle" link="/vedic" />
             <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Western Zenith" description="Tropical zodiac, Placidus houses, planetary aspects analysis" link="/western" />
             <FeatureCard icon={<Sparkles className="w-10 h-10 text-[#D4AF37]" />} title="Tarot Oracle" description="78+44 cards, 5 reading types, personalized deck weighting" link="/tarot" />

@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Volume2, TrendingUp, Activity } from 'lucide-react';
 import axios from 'axios';
+import { AdBanner, AdRewarded } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AuraAlignment = () => {
   const [gameState, setGameState] = useState('intro');
+  const [showCosmicReset, setShowCosmicReset] = useState(false);
   const [moonSign, setMoonSign] = useState('');
   const [targetFrequency, setTargetFrequency] = useState(528);
   const [userFrequency, setUserFrequency] = useState(400);
@@ -238,12 +241,20 @@ const AuraAlignment = () => {
               </div>
             </div>
 
-            <button onClick={startGame} className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] transition-all uppercase tracking-widest">
-              Align Again
-            </button>
+            <AdBanner slot="aura-result" className="mb-4" />
+            <div className="space-y-3">
+              {!result.success && (
+                <button onClick={() => setShowCosmicReset(true)} className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all uppercase tracking-widest text-sm" data-testid="cosmic-reset-btn">Cosmic Reset — Watch & Retry</button>
+              )}
+              <div className="flex gap-3">
+                <ShareButton title="Aura Alignment" text={`I matched within ${result.difference}Hz in Aura Alignment on Zenith Oracle!`} />
+                <button onClick={startGame} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-bold py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm">Align Again</button>
+              </div>
+            </div>
           </motion.div>
         )}
       </div>
+      <AdRewarded show={showCosmicReset} onReward={() => { setShowCosmicReset(false); startGame(); }} onClose={() => setShowCosmicReset(false)} />
     </div>
   );
 };

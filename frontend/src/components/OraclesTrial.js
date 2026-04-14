@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Star, Eye, Coins, Award, Play } from 'lucide-react';
 import axios from 'axios';
+import { AdBanner, AdRewarded } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -16,6 +18,7 @@ const OraclesTrial = () => {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [showAd, setShowAd] = useState(false);
   const [adCountdown, setAdCountdown] = useState(5);
+  const [showCosmicReset, setShowCosmicReset] = useState(false);
 
   const totalRounds = 5;
 
@@ -148,10 +151,13 @@ const OraclesTrial = () => {
               dustEarned={correctAnswers * 100}
               goldDust={goldDust}
               playAgain={playAgain}
+              showCosmicReset={showCosmicReset}
+              setShowCosmicReset={setShowCosmicReset}
             />
           )}
         </AnimatePresence>
       </div>
+      <AdRewarded show={showCosmicReset} onReward={() => { setShowCosmicReset(false); setGameState('intro'); setCorrectAnswers(0); setRound(1); }} onClose={() => setShowCosmicReset(false)} />
     </div>
   );
 };
@@ -284,70 +290,40 @@ const AdScreen = ({ countdown }) => (
   </motion.div>
 );
 
-const ResultScreen = ({ correctAnswers, totalRounds, dustEarned, goldDust, playAgain }) => {
+const ResultScreen = ({ correctAnswers, totalRounds, dustEarned, goldDust, playAgain, showCosmicReset, setShowCosmicReset }) => {
   const isPerfect = correctAnswers === totalRounds;
+  const isLoss = correctAnswers < 3;
   const bonus = isPerfect ? 500 : 0;
-  const totalEarned = dustEarned + bonus;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-2xl p-8"
-    >
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-2xl p-8">
       <div className="text-center mb-8">
         {isPerfect ? (
-          <>
-            <Award className="w-24 h-24 text-[#D4AF37] mx-auto mb-4" />
-            <h2 className="text-4xl font-bold text-[#D4AF37] mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Perfect Intuition!</h2>
-            <p className="text-white/70">The Oracle bows to your wisdom</p>
-          </>
-        ) : correctAnswers >= 3 ? (
-          <>
-            <Star className="w-24 h-24 text-[#D4AF37] mx-auto mb-4" />
-            <h2 className="text-4xl font-bold text-white mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Well Done</h2>
-            <p className="text-white/70">Your intuition serves you well</p>
-          </>
+          <><Award className="w-24 h-24 text-[#D4AF37] mx-auto mb-4" /><h2 className="text-4xl font-bold text-[#D4AF37] mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Perfect Intuition!</h2><p className="text-white/70">The Oracle bows to your wisdom</p></>
+        ) : !isLoss ? (
+          <><Star className="w-24 h-24 text-[#D4AF37] mx-auto mb-4" /><h2 className="text-4xl font-bold text-white mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Well Done</h2><p className="text-white/70">Your intuition serves you well</p></>
         ) : (
-          <>
-            <Eye className="w-24 h-24 text-white/40 mx-auto mb-4" />
-            <h2 className="text-4xl font-bold text-white/70 mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Trial Failed</h2>
-            <p className="text-white/70">Sharpen your intuition and return</p>
-          </>
+          <><Eye className="w-24 h-24 text-white/40 mx-auto mb-4" /><h2 className="text-4xl font-bold text-white/70 mb-2" style={{fontFamily: 'Playfair Display, serif'}}>Trial Failed</h2><p className="text-white/70">Sharpen your intuition and return</p></>
         )}
       </div>
-
       <div className="bg-[#020617]/60 border border-[#D4AF37]/40 rounded-xl p-6 mb-6">
-        <div className="text-center mb-6">
-          <div className="text-6xl font-bold text-[#D4AF37] mb-2">{correctAnswers}/{totalRounds}</div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Correct Answers</div>
-        </div>
-
+        <div className="text-center mb-6"><div className="text-6xl font-bold text-[#D4AF37] mb-2">{correctAnswers}/{totalRounds}</div><div className="text-sm uppercase tracking-widest text-white/60">Correct Answers</div></div>
         <div className="space-y-3 border-t border-[#D4AF37]/20 pt-4">
-          <div className="flex justify-between text-white/70">
-            <span>Base Reward:</span>
-            <span className="text-[#D4AF37] font-bold">+{dustEarned}</span>
-          </div>
-          {isPerfect && (
-            <div className="flex justify-between text-white/70">
-              <span>Perfect Bonus:</span>
-              <span className="text-[#D4AF37] font-bold">+{bonus}</span>
-            </div>
-          )}
-          <div className="flex justify-between text-lg font-bold border-t border-[#D4AF37]/20 pt-3">
-            <span className="text-white">Total Gold Dust:</span>
-            <span className="text-[#D4AF37]">{goldDust}</span>
-          </div>
+          <div className="flex justify-between text-white/70"><span>Base Reward:</span><span className="text-[#D4AF37] font-bold">+{dustEarned}</span></div>
+          {isPerfect && <div className="flex justify-between text-white/70"><span>Perfect Bonus:</span><span className="text-[#D4AF37] font-bold">+{bonus}</span></div>}
+          <div className="flex justify-between text-lg font-bold border-t border-[#D4AF37]/20 pt-3"><span className="text-white">Total Gold Dust:</span><span className="text-[#D4AF37]">{goldDust}</span></div>
         </div>
       </div>
-
-      <button
-        onClick={playAgain}
-        className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] transition-all uppercase tracking-widest"
-        data-testid="play-again-button"
-      >
-        Face the Oracle Again
-      </button>
+      <AdBanner slot="oracles-trial-result" className="mb-4" />
+      <div className="space-y-3">
+        {isLoss && (
+          <button onClick={() => setShowCosmicReset(true)} className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all uppercase tracking-widest text-sm" data-testid="cosmic-reset-btn">Cosmic Reset — Watch & Retry</button>
+        )}
+        <div className="flex gap-3">
+          <ShareButton title="Oracle's Trial" text={`I scored ${correctAnswers}/${totalRounds} in Oracle's Trial on Zenith Oracle!`} />
+          <button onClick={playAgain} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-bold py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm" data-testid="play-again-button">Face the Oracle Again</button>
+        </div>
+      </div>
     </motion.div>
   );
 };

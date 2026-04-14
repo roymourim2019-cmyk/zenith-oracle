@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Swords, Shield, Crown, Star, Play, RotateCcw } from 'lucide-react';
 import axios from 'axios';
+import { AdBanner, AdRewarded } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -38,6 +40,7 @@ const scorePlanet = (planet) => {
 
 const SovereignDuel = () => {
   const [phase, setPhase] = useState('setup');
+  const [showCosmicReset, setShowCosmicReset] = useState(false);
   const [form, setForm] = useState({ name: '', birth_date: '', birth_time: '', latitude: 28.6139, longitude: 77.209, timezone_offset: 5.5 });
   const [opponent, setOpponent] = useState(null);
   const [playerChart, setPlayerChart] = useState(null);
@@ -213,13 +216,23 @@ const SovereignDuel = () => {
                 <div className="text-3xl font-bold text-white/70">{oppScore}</div>
               </div>
             </div>
-            <button onClick={reset} className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] transition-all uppercase tracking-widest" data-testid="duel-again-button">
-              <RotateCcw className="w-5 h-5 inline mr-2" />
-              Challenge Again
-            </button>
+            <AdBanner slot="sovereign-duel-result" className="mb-4" />
+            <div className="space-y-3">
+              {playerScore < oppScore && (
+                <button onClick={() => setShowCosmicReset(true)} className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all uppercase tracking-widest text-sm" data-testid="cosmic-reset-btn">Cosmic Reset — Watch & Retry</button>
+              )}
+              <div className="flex gap-3">
+                <ShareButton title="Sovereign Duel" text={`I ${playerScore > oppScore ? 'conquered' : 'battled'} ${opponent?.name} (${playerScore}-${oppScore}) in Sovereign Duel on Zenith Oracle!`} />
+                <button onClick={reset} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-bold py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm" data-testid="duel-again-button">
+                  <RotateCcw className="w-4 h-4 inline mr-2" />
+                  Challenge Again
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
       </div>
+      <AdRewarded show={showCosmicReset} onReward={() => { setShowCosmicReset(false); reset(); }} onClose={() => setShowCosmicReset(false)} />
     </div>
   );
 };

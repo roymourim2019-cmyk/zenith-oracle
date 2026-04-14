@@ -18,6 +18,7 @@ from services.chinese_service import ChineseAstrologyService
 from services.numerology_service import NumerologyService
 from services.tarot_service import TarotService
 from services.gemini_service import GeminiService
+from emergentintegrations.llm.chat import UserMessage
 from services.synthesis_engine import SynthesisEngine
 from pydantic import Field as PydanticField
 from models.astro_models import *
@@ -758,6 +759,79 @@ async def get_daily_tarot_card():
         return card
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Daily tarot card failed: {str(e)}")
+
+
+@api_router.post("/alpha-briefing")
+async def get_alpha_briefing(birth_date: str = None, birth_time: str = None, latitude: float = None, longitude: float = None):
+    """Generate a 60-second Alpha Daily Briefing using Gemini + real transit data"""
+    import swisseph as swe
+
+    try:
+        now = datetime.now(timezone.utc)
+        jd_now = swe.julday(now.year, now.month, now.day, now.hour + now.minute / 60.0)
+
+        planets = [
+            (swe.SUN, "Sun"), (swe.MOON, "Moon"), (swe.MERCURY, "Mercury"),
+            (swe.VENUS, "Venus"), (swe.MARS, "Mars"), (swe.JUPITER, "Jupiter"),
+            (swe.SATURN, "Saturn"),
+        ]
+        signs = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"]
+
+        transit_summary = []
+        for pid, name in planets:
+            pos = swe.calc_ut(jd_now, pid)[0]
+            sign = signs[int(pos[0] / 30) % 12]
+            deg = pos[0] % 30
+            transit_summary.append(f"{name} in {sign} at {deg:.1f}\u00B0")
+
+        user_chart_context = ""
+        if birth_date and birth_time and latitude is not None and longitude is not None:
+            try:
+                chart = vedic_service.calculate_birth_chart(birth_date, birth_time, latitude, longitude, 5.5)
+                moon_pos = next((p for p in chart['planets'] if p['name'] == 'Moon'), None)
+                user_chart_context = f"\nUser's Vedic Chart: Ascendant {chart.get('ascendant_sign','')}, Moon in {moon_pos['sign'] if moon_pos else 'unknown'}, Dasha Lord: {chart.get('dasha_lord','')}, Power Score: {chart.get('power_score',0)}/100."
+            except Exception:
+                pass
+
+        day_num = (now.day + now.month) % 9 + 1
+
+        prompt = f"""You are the Alpha Oracle delivering a 60-SECOND MORNING STRATEGY BRIEFING. Today is {now.strftime('%A, %B %d, %Y')}.
+
+Current Planetary Transits (Swiss Ephemeris):
+{chr(10).join(transit_summary)}
+
+Universal Day Number: {day_num}
+{user_chart_context}
+
+Deliver a POWERFUL, CONCISE morning briefing covering:
+1. TODAY'S COSMIC ENERGY (2 sentences — what element dominates, energy level)
+2. STRATEGIC MOVE OF THE DAY (2 sentences — one concrete action based on transits)
+3. DANGER ZONE (1 sentence — what to avoid and why)
+4. POWER MANTRA (1 sentence — an empowering affirmation)
+
+Style: Authoritative, alpha, strategic. No fluff. Every sentence is a weapon of clarity. Use real transit positions. Keep it under 150 words."""
+
+        await gemini_service.initialize()
+        briefing_text = await gemini_service.chat.send_message(UserMessage(text=prompt))
+
+        return {
+            "date": now.strftime("%Y-%m-%d"),
+            "day": now.strftime("%A"),
+            "briefing": briefing_text,
+            "transits": transit_summary,
+            "day_number": day_num,
+            "scripture": f"Alpha Briefing powered by Swiss Ephemeris (NASA JPL DE431) + Gemini AI. Transit data for JD {jd_now:.4f}.",
+        }
+
+    except Exception as e:
+        return {
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "day": datetime.now(timezone.utc).strftime("%A"),
+            "briefing": f"The cosmos is momentarily veiled. Transit data shows the Moon moves through the zodiac, carrying today's strategic potential. Trust your foundation today. Error: {str(e)}",
+            "transits": [],
+            "day_number": 1,
+            "scripture": "Fallback briefing. Gemini API temporarily unavailable.",
+        }
 
 
 app.include_router(api_router)

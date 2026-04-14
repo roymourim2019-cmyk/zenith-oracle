@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Zap, TrendingUp, Activity, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import HapticSignature from '../utils/HapticSignature';
+import { AdBanner, AdRewarded } from './AdComponents';
+import { ShareButton } from './ShareCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -210,22 +212,20 @@ const VortexVelocity = () => {
               <p className="text-white/80">Difference: <span className="text-[#D4AF37] font-bold">{result.difference}°</span></p>
             </div>
 
-            <button onClick={startGame} className="w-full bg-[#D4AF37] text-[#020617] font-bold py-4 hover:bg-[#F3E5AB] transition-all uppercase tracking-widest">
-              Race Again
-            </button>
-          </motion.div>
-        )}
-
-        {showAd && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
-            <div className="glass-card rounded-2xl p-12 max-w-md text-center border-2 border-[#D4AF37]">
-              <h3 className="text-3xl font-bold text-white mb-4">Cosmic Reset</h3>
-              <p className="text-white/70 mb-6">Watch this transmission to continue racing</p>
-              <div className="text-6xl font-bold text-[#D4AF37]">AD</div>
-              <p className="text-sm text-white/60 mt-4">AdMob Rewarded Video (Test Mode)</p>
+            <AdBanner slot="vortex-result" className="mb-4" />
+            <div className="space-y-3">
+              {!result.success && (
+                <button onClick={() => setShowAd(true)} className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#020617] font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all uppercase tracking-widest text-sm" data-testid="cosmic-reset-btn">Cosmic Reset — Watch & Retry</button>
+              )}
+              <div className="flex gap-3">
+                <ShareButton title="Vortex Velocity" text={`I locked a planetary degree within ${result.difference}° in Vortex Velocity on Zenith Oracle!`} />
+                <button onClick={startGame} className="flex-1 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-bold py-3 rounded-xl hover:bg-[#D4AF37]/10 transition-all uppercase tracking-widest text-sm">Race Again</button>
+              </div>
             </div>
           </motion.div>
         )}
+
+        <AdRewarded show={showAd} onReward={() => { setShowAd(false); startGame(); }} onClose={() => setShowAd(false)} />
       </div>
     </div>
   );
