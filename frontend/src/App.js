@@ -14,21 +14,7 @@ import WesternChart from "./components/WesternChart";
 import ChineseAstrology from "./components/ChineseAstrology";
 import NumerologyCalculator from "./components/NumerologyCalculator";
 import TarotReader from "./components/TarotReader";
-import PowerMeter from "./components/PowerMeter";
-import AccuracyLab from "./components/AccuracyLab";
-import MarketSiege from "./components/MarketSiege";
-import OraclesTrial from "./components/OraclesTrial";
-import VortexVelocity from "./components/VortexVelocity";
-import AuraAlignment from "./components/AuraAlignment";
-import SovereignDuel from "./components/SovereignDuel";
-import SovereignSynthesis from "./components/SovereignSynthesis";
-import GlobalSuccessMap from "./components/GlobalSuccessMap";
-import BiometricVault from "./components/BiometricVault";
-import NegotiationSimulator from "./components/NegotiationSimulator";
-import PrecisionAlerts from "./components/PrecisionAlerts";
-import VocalOracle from "./components/VocalOracle";
 import CompatibilityChecker from "./components/CompatibilityChecker";
-import OnboardingFlow from "./components/OnboardingFlow";
 import DailyOracle from "./components/DailyOracle";
 import AlphaBriefing from "./components/AlphaBriefing";
 import { AdBanner } from "./components/AdComponents";
@@ -37,43 +23,27 @@ import ChartPDFUnlock from "./components/ChartPDFUnlock";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
 import { usePushNotifications } from "./hooks/usePushNotifications";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+// Custom Hooks 
+import { useUserProfile, useStreak, useRatingPrompt } from "./hooks/useAppFeatures";
 
 const App = () => {
-  const { profile, saveProfile, isOnboarded, markOnboarded } = useUserProfile();
+  const { profile, saveProfile } = useUserProfile();
   const { streak, recordVisit } = useStreak();
-  const { readingsCount, incrementReadings } = useReadingsCount();
-  const { shouldShowRating, checkRating, dismissRating } = useRatingPrompt();
-  const { canInstall, install, dismissInstall } = useInstallPrompt();
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const { shouldShowRating, dismissRating } = useRatingPrompt();
 
   useEffect(() => {
-    if (!isOnboarded) {
-      setShowOnboarding(true);
-    }
     recordVisit();
   }, []);
 
-  const handleOnboardComplete = (profileData) => {
-    saveProfile(profileData);
-    markOnboarded();
-    setShowOnboarding(false);
-  };
-
   return (
-    <div className="App min-h-screen bg-[#020617]">
+    <div className="App min-h-screen bg-[#020617] text-white">
       <BrowserRouter>
+        <AdManager /> 
+        
         <Routes>
+          {/* Birth Data Login replaces the old Enterprise Keys */}
           <Route path="/" element={
-            <Home 
-              profile={profile}
-              streak={streak}
-              readingsCount={readingsCount}
-              canInstall={canInstall}
-              onInstall={install}
-              onDismissInstall={dismissInstall}
-            />
+            !profile ? <BirthDataLogin onSave={saveProfile} /> : <Home profile={profile} streak={streak} />
           } />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/daily" element={<DailyOracle />} />
@@ -84,27 +54,10 @@ const App = () => {
           <Route path="/numerology" element={<NumerologyCalculator />} />
           <Route path="/tarot" element={<TarotReader />} />
           <Route path="/compatibility" element={<CompatibilityChecker />} />
-          <Route path="/power-meter" element={<PowerMeter />} />
-          <Route path="/accuracy-lab" element={<AccuracyLab />} />
-          <Route path="/market-siege" element={<MarketSiege />} />
-          <Route path="/oracles-trial" element={<OraclesTrial />} />
-          <Route path="/global-success-map" element={<GlobalSuccessMap />} />
-          <Route path="/biometric-vault" element={<BiometricVault />} />
-          <Route path="/negotiation-simulator" element={<NegotiationSimulator />} />
-          <Route path="/precision-alerts" element={<PrecisionAlerts />} />
-          <Route path="/vortex-velocity" element={<VortexVelocity />} />
-          <Route path="/aura-alignment" element={<AuraAlignment />} />
-          <Route path="/sovereign-duel" element={<SovereignDuel />} />
-          <Route path="/synthesis" element={<SovereignSynthesis />} />
         </Routes>
-        <GlobalFooter />
+        
         <BottomNav />
-        <VocalOracle />
       </BrowserRouter>
-
-      {showOnboarding && (
-        <OnboardingFlow onComplete={handleOnboardComplete} />
-      )}
 
       {shouldShowRating && <RatingPrompt onDismiss={dismissRating} />}
 
@@ -113,38 +66,21 @@ const App = () => {
   );
 };
 
-/* ───────── Global Footer ───────── */
-const GlobalFooter = () => {
-  const location = useLocation();
-  if (location.pathname === '/') return null;
+/* ───────── THE BIRTH DATA LOGIN ───────── */
+const BirthDataLogin = ({ onSave }) => {
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    dob: '', 
+    tob: '', 
+    pob: '' 
+  });
 
-  return (
-    <footer className="pb-20 pt-8 border-t border-white/5" data-testid="global-footer">
-      <p className="text-center text-[#6B7280] text-xs tracking-wide" style={{ fontFamily: 'Inter, sans-serif' }}>
-        &copy; 2026 Roy's Enterprise. All Rights Reserved.
-      </p>
-    </footer>
-  );
-};
-
-/* ───────── Rating Prompt ───────── */
-const RatingPrompt = ({ onDismiss }) => (
-  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[250] flex items-center justify-center p-4" data-testid="rating-prompt">
-    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-card rounded-2xl p-8 max-w-sm w-full text-center">
-      <span className="text-4xl block mb-4">&#x2B50;</span>
-      <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Enjoying Zenith Oracle?</h3>
-      <p className="text-sm text-white/60 mb-6">Your support helps us bring cosmic wisdom to more seekers worldwide.</p>
-      <div className="flex gap-3">
-        <button onClick={() => { onDismiss(); }} className="flex-1 bg-[#D4AF37] text-[#020617] font-bold py-3 rounded-xl text-xs uppercase tracking-widest" data-testid="rate-yes-btn">
-          Rate 5 Stars
-        </button>
-        <button onClick={onDismiss} className="px-4 py-3 rounded-xl border border-white/10 text-white/30 text-xs" data-testid="rate-later-btn">
-          Later
-        </button>
-      </div>
-    </motion.div>
-  </div>
-);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.name && formData.dob) {
+      onSave(formData);
+    }
+  };
 
 /* ───────── HOME PAGE ───────── */
 const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismissInstall }) => {
@@ -161,40 +97,39 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <Starfield />
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#020617] relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#D4AF37]/10 blur-[120px] rounded-full" />
       
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{
-          backgroundImage: "url('https://images.pexels.com/photos/6141905/pexels-photo-6141905.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')"
-        }}
-      />
-      
-      <div className="relative z-10">
-        {/* Header */}
-        <header className="container mx-auto px-6 py-6">
-          <nav className="flex justify-between items-center">
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center space-x-3">
-              <Sparkles className="w-8 h-8 text-[#D4AF37]" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight" style={{fontFamily: 'Playfair Display, serif'}}>
-                ZENITH <span className="text-[#D4AF37]">ORACLE</span>
-              </h1>
-            </motion.div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }} 
+        animate={{ opacity: 1, scale: 1 }} 
+        className="glass-card p-10 rounded-[40px] border border-[#D4AF37]/20 w-full max-w-md text-center relative z-10"
+      >
+        <div className="w-20 h-20 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#D4AF37]/20">
+          <Sparkles className="w-10 h-10 text-[#D4AF37]" />
+        </div>
+        
+        <h2 className="text-3xl font-bold mb-2 tracking-tight" style={{ fontFamily: 'Playfair Display' }}>Initialize Oracle</h2>
+        <p className="text-white/40 text-[10px] uppercase tracking-[0.3em] mb-10">Aligning with the 2026 Transit Matrix</p>
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="relative">
+            <input 
+              type="text" placeholder="Full Name" required
+              className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:border-[#D4AF37] outline-none transition-all placeholder:text-white/20 text-sm"
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+            />
+          </div>
 
-            <div className="flex items-center space-x-3">
-              {/* Streak Badge */}
-              {streak.count > 0 && (
-                <div className="flex items-center gap-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/30 px-3 py-1.5 rounded-lg" data-testid="streak-badge">
-                  <Flame className="w-4 h-4 text-[#D4AF37]" />
-                  <span className="text-xs text-[#D4AF37] font-bold">{streak.count}</span>
-                  <span className="text-[9px] text-white/30">day{streak.count !== 1 ? 's' : ''}</span>
-                </div>
-              )}
-              {/* Readings Counter */}
-              <div className="hidden sm:flex items-center gap-1 text-white/30 text-[10px]">
-                <span className="text-[#D4AF37] font-bold">{readingsCount.toLocaleString()}</span> readings
-              </div>
+          <div className="grid grid-cols-1 gap-4">
+            <div className="text-left flex flex-col gap-2">
+              <label className="text-[9px] text-[#D4AF37] ml-2 uppercase font-black tracking-widest">Date of Birth</label>
+              <input 
+                type="date" required
+                className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:border-[#D4AF37] outline-none text-sm"
+                onChange={(e) => setFormData({...formData, dob: e.target.value})}
+              />
             </div>
           </nav>
         </header>
@@ -225,61 +160,44 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
               )}
             </motion.div>
           </div>
-        )}
 
-        {/* Hero Section */}
-        <section className="container mx-auto px-6 py-16 sm:py-20">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 gold-glow" style={{fontFamily: 'Playfair Display, serif'}}>
-                Scripture-Bound Deterministic Math
-              </h2>
-              <p className="text-lg sm:text-xl md:text-2xl text-[#94A3B8] mb-6 font-light">
-                100% Free. Ancient Wisdom. Swiss Ephemeris Precision.
-              </p>
-              <p className="text-base text-white/60 mb-10 leading-relaxed max-w-2xl mx-auto">
-                Vedic D1-D60 charts. Western Topocentric. Chinese Lunisolar. AI insights. 
-                Tarot Oracle. 5 Strategy Games. All powered by real astronomical calculations.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="/daily">
-                  <button className="oracle-button text-white font-bold py-4 px-12 text-base uppercase tracking-widest" data-testid="daily-oracle-button">
-                    Today's Oracle
-                    <ChevronRight className="inline ml-2 w-6 h-6" />
-                  </button>
-                </a>
-                <a href="/dashboard">
-                  <button className="border border-[#D4AF37]/40 text-[#D4AF37] font-bold py-4 px-8 text-sm uppercase tracking-widest rounded-xl hover:bg-[#D4AF37]/10 transition-all" data-testid="enter-oracle-button">
-                    Full Oracle Matrix
-                  </button>
-                </a>
-                <a href="/compatibility">
-                  <button className="border border-white/20 text-white/60 font-bold py-4 px-8 text-sm uppercase tracking-widest rounded-xl hover:bg-white/5 transition-all" data-testid="compatibility-cta">
-                    <Heart className="inline mr-2 w-4 h-4" />
-                    Compatibility
-                  </button>
-                </a>
-              </div>
-
-              {/* Social Proof */}
-              <div className="flex items-center justify-center gap-6 mt-8 text-xs text-white/30">
-                <span><span className="text-[#D4AF37] font-bold">10,000+</span> readings performed</span>
-                <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span><span className="text-[#D4AF37] font-bold">4.9</span> App Rating</span>
-                <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span><span className="text-[#D4AF37] font-bold">100%</span> Free</span>
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-2 gap-4">
+             <div className="text-left flex flex-col gap-2">
+                <label className="text-[9px] text-white/30 ml-2 uppercase font-black tracking-widest">Time (Optional)</label>
+                <input 
+                  type="time" 
+                  className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:border-[#D4AF37] outline-none text-sm"
+                  onChange={(e) => setFormData({...formData, tob: e.target.value})}
+                />
+             </div>
+             <div className="text-left flex flex-col gap-2">
+                <label className="text-[9px] text-white/30 ml-2 uppercase font-black tracking-widest">Birth Place</label>
+                <input 
+                  type="text" placeholder="City"
+                  className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:border-[#D4AF37] outline-none text-sm placeholder:text-white/20"
+                  onChange={(e) => setFormData({...formData, pob: e.target.value})}
+                />
+             </div>
           </div>
-        </section>
 
-        {/* Oracle Feed Ticker */}
-        <HomeOracleTicker />
+          <button type="submit" className="w-full py-6 bg-[#D4AF37] text-black font-black rounded-3xl uppercase tracking-[0.2em] text-[11px] shadow-[0_20px_40px_rgba(212,175,55,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Reveal My Destiny
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  );
+};
 
-        {/* Ad Banner */}
-        <div className="container mx-auto px-6 py-4">
-          <AdBanner slot="home-top" />
+/* ───────── HOME DASHBOARD ───────── */
+const Home = ({ profile, streak }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="relative min-h-screen pb-32">
+      <header className="p-8 flex justify-between items-center">
+        <div className="flex flex-col">
+          <span className="text-[9px] text-[#D4AF37] font-black uppercase tracking-[0.3em] mb-1">Authenticated User</span>
+          <h1 className="text-2xl font-bold tracking-tighter uppercase" style={{fontFamily: 'Playfair Display'}}>{profile.name}</h1>
         </div>
 
         {/* Birth Chart PDF — Rewarded Video Unlock */}
@@ -336,45 +254,28 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
         <div className="container mx-auto px-6 py-4">
           <AdBanner slot="home-bottom" />
         </div>
+      </main>
 
-        {/* Footer */}
-        <footer className="border-t border-[#D4AF37]/20 py-8 mt-12">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-[#94A3B8] text-sm">
-              Swiss Ephemeris-powered. Scripture-Bound Deterministic Math. 100% Free.
-            </p>
-            <p className="text-[#6B7280] text-xs mt-3 tracking-wide" style={{ fontFamily: 'Inter, sans-serif' }}>
-              &copy; 2026 Roy's Enterprise. All Rights Reserved.
-            </p>
-          </div>
-        </footer>
+      {/* Play Store Revenue Slot */}
+      <div className="fixed bottom-32 left-8 right-8 h-20 bg-white/5 rounded-3xl flex flex-col items-center justify-center border border-white/5 backdrop-blur-md">
+          <span className="text-[8px] text-white/20 uppercase font-black tracking-[0.5em]">Sponsored Insight</span>
+          <div className="w-12 h-1 bg-[#D4AF37]/20 mt-2 rounded-full" />
       </div>
     </div>
   );
 };
 
-/* ───────── Install Banner ───────── */
-const InstallBanner = ({ onInstall, onDismiss }) => (
-  <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-6 mb-4" data-testid="install-banner">
-    <div className="glass-card rounded-2xl p-4 flex items-center justify-between border-[#D4AF37]/40">
-      <div className="flex items-center gap-3">
-        <Download className="w-6 h-6 text-[#D4AF37]" />
-        <div>
-          <p className="text-sm text-white font-semibold">Install Zenith Oracle</p>
-          <p className="text-[10px] text-white/30">Add to home screen for the full experience</p>
-        </div>
+const MenuCard = ({ icon, title, path }) => {
+  const navigate = useNavigate();
+  return (
+    <div onClick={() => navigate(path)} className="bg-white/5 border border-white/10 p-8 rounded-[35px] flex flex-col items-start gap-4 hover:border-[#D4AF37]/40 transition-all cursor-pointer group active:scale-95">
+      <div className="p-3 bg-white/5 rounded-2xl text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
+        {React.cloneElement(icon, { size: 22 })}
       </div>
-      <div className="flex items-center gap-2">
-        <button onClick={onInstall} className="bg-[#D4AF37] text-[#020617] font-bold py-2 px-5 rounded-lg text-xs uppercase tracking-widest" data-testid="install-btn">
-          Install
-        </button>
-        <button onClick={onDismiss} className="text-white/20 hover:text-white/40 transition-colors" data-testid="dismiss-install-btn">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+      <span className="text-[10px] font-black uppercase tracking-widest">{title}</span>
     </div>
-  </motion.div>
-);
+  );
+};
 
 /* ───────── Notification Banner ───────── */
 const NotificationBanner = ({ onSubscribe, onDismiss }) => (
@@ -442,160 +343,27 @@ const Starfield = () => {
   return <div id="starfield-container" className="starfield" />;
 };
 
-/* ───────── Feature Card ───────── */
-const FeatureCard = ({ icon, title, description, link, isGame, isNew }) => (
-  <motion.a
-    href={link || '#'}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className={`glass-card rounded-2xl p-5 hover:-translate-y-1 transition-all duration-300 block cursor-pointer ${
-      isGame ? 'border-[#D4AF37]/80 bg-gradient-to-br from-[#D4AF37]/5 to-transparent hover:border-[#D4AF37] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]' 
-      : 'hover:border-[#D4AF37]/60'
-    }`}
-    data-testid={`feature-card-${title.toLowerCase().replace(/\s+/g, '-')}`}
-  >
-    <div className="mb-3">{icon}</div>
-    <h4 className="text-lg font-bold text-white mb-1.5 flex items-center">
-      {title}
-      {isNew && <span className="ml-2 bg-green-500 text-white text-[8px] px-1.5 py-0.5 rounded uppercase font-bold">New</span>}
-      {isGame && <span className="ml-2 bg-[#D4AF37] text-[#020617] text-[8px] px-1.5 py-0.5 rounded uppercase font-bold">Game</span>}
-    </h4>
-    <p className="text-[#94A3B8] text-sm leading-relaxed">{description}</p>
-  </motion.a>
+const NavButton = ({ icon, onClick, label, active }) => (
+    <button onClick={onClick} className={`flex flex-col items-center gap-1 transition-all ${active ? 'text-[#D4AF37]' : 'text-white/20'}`}>
+        {React.cloneElement(icon, { size: 20 })}
+        <span className="text-[8px] font-black uppercase">{label}</span>
+    </button>
 );
 
-/* ───────── Game Card ───────── */
-const GameCard = ({ icon, title, description, link, badge, index }) => (
-  <motion.a
-    href={link}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.08 }}
-    className="glass-card rounded-2xl p-5 w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] border-[#D4AF37]/40 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all duration-300 block cursor-pointer group"
-    data-testid={`game-card-${title.toLowerCase().replace(/\s+/g, '-')}`}
-  >
-    <div className="flex items-center justify-between mb-3">
-      <div className="w-12 h-12 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center border border-[#D4AF37]/30 group-hover:bg-[#D4AF37]/20 transition-all">
-        {icon}
-      </div>
-      <span className="text-[9px] bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded uppercase tracking-widest font-bold">{badge}</span>
+const RatingPrompt = ({ onDismiss }) => (
+    <div className="fixed inset-0 bg-black/95 flex items-center justify-center p-10 z-[1001] backdrop-blur-xl">
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#0f172a] p-12 rounded-[50px] border border-[#D4AF37]/30 text-center max-w-sm shadow-3xl">
+            <div className="w-20 h-20 bg-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(212,175,55,0.4)]">
+                <Star className="w-10 h-10 text-black fill-black" />
+            </div>
+            <h3 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Playfair Display' }}>Enjoying Zenith?</h3>
+            <p className="text-white/40 text-xs mb-10 leading-relaxed uppercase tracking-widest">Rate us 5 stars on the Play Store to unlock even deeper cosmic features.</p>
+            <div className="flex flex-col gap-4">
+                <button onClick={onDismiss} className="w-full py-5 bg-[#D4AF37] text-black font-black rounded-2xl text-[11px] uppercase tracking-widest">Support with 5 Stars</button>
+                <button onClick={onDismiss} className="text-white/20 text-[10px] uppercase font-black tracking-widest py-2">Later</button>
+            </div>
+        </motion.div>
     </div>
-    <h4 className="text-base font-bold text-white mb-1.5 flex items-center">
-      {title}
-      <span className="ml-2 bg-[#D4AF37] text-[#020617] text-[8px] px-1.5 py-0.5 rounded uppercase font-bold">Game</span>
-    </h4>
-    <p className="text-[#94A3B8] text-sm leading-relaxed">{description}</p>
-    <div className="mt-3 flex items-center text-[#D4AF37] text-xs font-semibold uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-      Enter Arena <ChevronRight className="w-3.5 h-3.5 ml-1" />
-    </div>
-  </motion.a>
 );
-
-/* ───────── Bottom Nav ───────── */
-const BottomNav = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  
-  if (location.pathname === '/') return null;
-
-  const navItems = [
-    { icon: <Sun className="w-5 h-5" />, label: 'Daily', path: '/daily' },
-    { icon: <Eye className="w-5 h-5" />, label: 'Oracle', path: '/dashboard' },
-    { icon: <Heart className="w-5 h-5" />, label: 'Match', path: '/compatibility' },
-    { icon: <Swords className="w-5 h-5" />, label: 'War Room', path: '/#war-room' },
-  ];
-
-  const handleNav = (path) => {
-    if (path === '/#war-room') {
-      navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById('war-room');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
-    } else {
-      navigate(path);
-    }
-  };
-
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[200] bg-[#020617]/90 backdrop-blur-xl border-t border-[#D4AF37]/20" data-testid="bottom-nav">
-      <div className="max-w-lg mx-auto flex justify-around py-2">
-        {navItems.map(item => {
-          const isActive = location.pathname === item.path;
-          return (
-            <button
-              key={item.label}
-              onClick={() => handleNav(item.path)}
-              className={`flex flex-col items-center py-1.5 px-3 rounded-lg transition-all ${
-                isActive ? 'text-[#D4AF37]' : 'text-white/40 hover:text-white/70'
-              }`}
-              data-testid={`nav-${item.label.toLowerCase()}`}
-            >
-              {item.icon}
-              <span className="text-[9px] uppercase tracking-widest mt-0.5 font-semibold">{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-};
-
-/* ───────── Home Oracle Ticker ───────── */
-const HomeOracleTicker = () => {
-  const [transits, setTransits] = useState(null);
-
-  useEffect(() => {
-    fetch(`${API}/oracle-feed`)
-      .then(r => r.json())
-      .then(d => setTransits(d))
-      .catch(() => {});
-  }, []);
-
-  if (!transits) return null;
-
-  return (
-    <section className="relative z-10 py-5 border-y border-[#D4AF37]/15" data-testid="home-oracle-ticker">
-      <div className="container mx-auto px-6">
-        <div className="flex items-center space-x-4 mb-2">
-          <span className="w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse" />
-          <span className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37] font-semibold">Cosmic Intelligence — Live</span>
-          <span className="text-[10px] text-white/30">{transits.psychic_update?.moon_phase} | Energy {transits.psychic_update?.collective_energy_rating}/100</span>
-        </div>
-        <div className="overflow-hidden">
-          <div className="ticker-scroll flex space-x-8 text-xs text-white/60 whitespace-nowrap">
-            {transits.current_transits && Object.entries(transits.current_transits).map(([name, data]) => (
-              <span key={name} className="inline-flex items-center space-x-1.5">
-                <span className="text-[#D4AF37] font-semibold">{name}</span>
-                <span>{data.sign} {data.degree?.toFixed(1)}</span>
-                <span className="text-white/30">|</span>
-                <span className="text-white/40">{data.nakshatra} P{data.pada}</span>
-                {data.retrograde && <span className="text-[#D4AF37]/60 text-[10px]">(R)</span>}
-              </span>
-            ))}
-            {transits.current_transits && Object.entries(transits.current_transits).map(([name, data]) => (
-              <span key={`dup-${name}`} className="inline-flex items-center space-x-1.5">
-                <span className="text-[#D4AF37] font-semibold">{name}</span>
-                <span>{data.sign} {data.degree?.toFixed(1)}</span>
-                <span className="text-white/30">|</span>
-                <span className="text-white/40">{data.nakshatra} P{data.pada}</span>
-                {data.retrograde && <span className="text-[#D4AF37]/60 text-[10px]">(R)</span>}
-              </span>
-            ))}
-          </div>
-        </div>
-        {transits.transit_alerts?.length > 0 && (
-          <div className="mt-2 text-xs text-white/40">
-            <span className="text-[#D4AF37] font-semibold">[LIVE]</span>
-            <span className="mx-1.5">{transits.transit_alerts[0]?.title}:</span>
-            <span className="italic">{transits.transit_alerts[0]?.message?.slice(0, 140)}...</span>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-};
 
 export default App;
