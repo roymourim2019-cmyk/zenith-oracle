@@ -95,6 +95,7 @@ const App = () => {
           <Route path="/sovereign-duel" element={<SovereignDuel />} />
           <Route path="/synthesis" element={<SovereignSynthesis />} />
         </Routes>
+        <GlobalFooter />
         <BottomNav />
         <VocalOracle />
       </BrowserRouter>
@@ -105,6 +106,20 @@ const App = () => {
 
       {shouldShowRating && <RatingPrompt onDismiss={dismissRating} />}
     </div>
+  );
+};
+
+/* ───────── Global Footer ───────── */
+const GlobalFooter = () => {
+  const location = useLocation();
+  if (location.pathname === '/') return null;
+
+  return (
+    <footer className="pb-20 pt-8 border-t border-white/5" data-testid="global-footer">
+      <p className="text-center text-[#6B7280] text-xs tracking-wide" style={{ fontFamily: 'Inter, sans-serif' }}>
+        &copy; 2026 Roy's Enterprise. All Rights Reserved.
+      </p>
+    </footer>
   );
 };
 
@@ -300,8 +315,8 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
             <p className="text-[#94A3B8] text-sm">
               Swiss Ephemeris-powered. Scripture-Bound Deterministic Math. 100% Free.
             </p>
-            <p className="text-[10px] text-white/20 mt-2">
-              &copy; 2026 Zenith Oracle | All features free forever | Ad-supported
+            <p className="text-[#6B7280] text-xs mt-3 tracking-wide" style={{ fontFamily: 'Inter, sans-serif' }}>
+              &copy; 2026 Roy's Enterprise. All Rights Reserved.
             </p>
           </div>
         </footer>

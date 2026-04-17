@@ -1,24 +1,30 @@
 {
-  "id": "zenith-oracle-app",
   "name": "Zenith Oracle - Cosmic Intelligence",
   "short_name": "Zenith Oracle",
-  "description": "Scripture-Bound Deterministic Math. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris.",
+  "id": "zenith-oracle-app",
+  "description": "Scripture-Bound Deterministic Math. 100% Free. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris. Roy's Enterprise.",
   "start_url": "/",
-  "scope": "/",
+  "display_override": ["window-controls-overlay"],
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
   "theme_color": "#050505",
   "background_color": "#050505",
-  "categories": ["lifestyle", "entertainment", "education"],
-  "lang": "en",
-  "dir": "ltr",
   "icons": [
     {
       "src": "/assets/zenith-oracle-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Zenith Oracle — Daily Oracle with real Swiss Ephemeris transits"
     }
   ],
   "screenshots": []
