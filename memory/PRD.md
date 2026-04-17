@@ -88,5 +88,6 @@
 - [x] PWA compliance (manifest, icons, screenshots, pwabuilder-sw.js)
 
 ## Remaining Backlog
-- [ ] Real AdMob SDK when deploying via Capacitor/TWA
-- [ ] App Store listing optimization (ASO keywords for Western markets)
+- [ ] Get AdSense approved and replace placeholder IDs in AdComponents.js
+- [ ] Generate more screenshots for Play Store listing (1080x1920)
+- [ ] App Store listing optimization (Apple-specific metadata)
