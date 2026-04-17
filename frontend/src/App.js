@@ -5,7 +5,7 @@ import {
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
   Users, ChevronRight, Globe, Hash, Mic,
   Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
-  Volume2, Crown, Eye, Scroll, Heart, Download, X, Flame
+  Volume2, Crown, Eye, Scroll, Heart, Download, X, Flame, Bell, BellRing
 } from "lucide-react";
 import "@/App.css";
 import Dashboard from "./components/Dashboard";
@@ -34,6 +34,7 @@ import AlphaBriefing from "./components/AlphaBriefing";
 import { AdBanner } from "./components/AdComponents";
 import AdManager from "./AdManager";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
+import { usePushNotifications } from "./hooks/usePushNotifications";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -146,6 +147,18 @@ const RatingPrompt = ({ onDismiss }) => (
 
 /* ───────── HOME PAGE ───────── */
 const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismissInstall }) => {
+  const { isSupported: notifSupported, isSubscribed: notifSubscribed, subscribe: notifSubscribe } = usePushNotifications();
+  const [notifDismissed, setNotifDismissed] = useState(() => !!localStorage.getItem('zenith_notif_dismissed'));
+
+  const handleNotifSubscribe = async () => {
+    await notifSubscribe(profile?.name);
+    setNotifDismissed(true);
+  };
+  const dismissNotif = () => {
+    localStorage.setItem('zenith_notif_dismissed', 'true');
+    setNotifDismissed(true);
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       <Starfield />
@@ -188,6 +201,11 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
         {/* Install Banner */}
         {canInstall && (
           <InstallBanner onInstall={onInstall} onDismiss={onDismissInstall} />
+        )}
+
+        {/* Push Notification Opt-In */}
+        {notifSupported && !notifSubscribed && !notifDismissed && profile && (
+          <NotificationBanner onSubscribe={handleNotifSubscribe} onDismiss={dismissNotif} />
         )}
 
         {/* Personalized Greeting */}
@@ -343,6 +361,29 @@ const InstallBanner = ({ onInstall, onDismiss }) => (
           Install
         </button>
         <button onClick={onDismiss} className="text-white/20 hover:text-white/40 transition-colors" data-testid="dismiss-install-btn">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  </motion.div>
+);
+
+/* ───────── Notification Banner ───────── */
+const NotificationBanner = ({ onSubscribe, onDismiss }) => (
+  <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-6 mb-4" data-testid="notification-banner">
+    <div className="glass-card rounded-2xl p-4 flex items-center justify-between border-[#D4AF37]/20">
+      <div className="flex items-center gap-3">
+        <BellRing className="w-6 h-6 text-[#D4AF37]" />
+        <div>
+          <p className="text-sm text-white font-semibold">Daily Oracle Digest</p>
+          <p className="text-[10px] text-white/30">Get your cosmic energy update every morning</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <button onClick={onSubscribe} className="bg-[#D4AF37] text-[#020617] font-bold py-2 px-5 rounded-lg text-xs uppercase tracking-widest" data-testid="notif-subscribe-btn">
+          Enable
+        </button>
+        <button onClick={onDismiss} className="text-white/20 hover:text-white/40 transition-colors" data-testid="dismiss-notif-btn">
           <X className="w-4 h-4" />
         </button>
       </div>
