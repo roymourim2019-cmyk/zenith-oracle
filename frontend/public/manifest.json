@@ -3,7 +3,7 @@
   "short_name": "Zenith Oracle",
   "id": "/",
   "description": "Free astrology app with 100% scientific accuracy. Get your Vedic birth chart, Western horoscope, Chinese zodiac, Tarot readings, Numerology analysis and daily cosmic forecasts powered by Swiss Ephemeris (NASA JPL). Daily oracle, compatibility checker, 5 strategy games and AI-powered cosmic briefings.",
-  "start_url": "./",
+  "start_url": "/",
   "scope": "/",
   "display_override": ["window-controls-overlay"],
   "display": "standalone",
