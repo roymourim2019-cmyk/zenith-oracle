@@ -4,7 +4,7 @@ import { Sparkles, ChevronRight, MapPin } from 'lucide-react';
 
 const OnboardingFlow = ({ onComplete }) => {
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({ name: '', birth_date: '', birth_time: '', latitude: '', longitude: '' });
+  const [formData, setFormData] = useState({ name: '', birth_date: '', birth_hour: '12', birth_minute: '00', birth_period: 'AM', latitude: '', longitude: '' });
   const [detectedCity, setDetectedCity] = useState('Kolkata');
 
   useEffect(() => {
@@ -33,10 +33,17 @@ const OnboardingFlow = ({ onComplete }) => {
   };
 
   const handleComplete = () => {
+    let hour24 = parseInt(formData.birth_hour, 10);
+    if (formData.birth_period === 'AM') {
+      if (hour24 === 12) hour24 = 0;
+    } else {
+      if (hour24 !== 12) hour24 += 12;
+    }
+    const timeStr = `${String(hour24).padStart(2, '0')}:${formData.birth_minute}:00`;
     const profile = {
       name: formData.name,
       birth_date: formData.birth_date,
-      birth_time: formData.birth_time || '12:00:00',
+      birth_time: timeStr,
       latitude: parseFloat(formData.latitude) || 28.6139,
       longitude: parseFloat(formData.longitude) || 77.209,
       timezone_offset: 5.5,
@@ -69,7 +76,55 @@ const OnboardingFlow = ({ onComplete }) => {
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-[#D4AF37] mb-2 block font-semibold">Birth Time <span className="text-white/20">(optional)</span></label>
-            <input type="time" step="1" value={formData.birth_time} onChange={e => setFormData(p => ({ ...p, birth_time: e.target.value ? (e.target.value.length === 5 ? e.target.value + ':00' : e.target.value) : '' }))} className="w-full bg-[#020617]/60 border border-[#D4AF37]/20 rounded-lg px-4 py-3 text-white text-sm focus:border-[#D4AF37] focus:outline-none" data-testid="onboard-time-input" />
+            <div className="flex items-center gap-2">
+              <select
+                value={formData.birth_hour}
+                onChange={e => setFormData(p => ({ ...p, birth_hour: e.target.value }))}
+                className="flex-1 bg-[#020617]/60 border border-[#D4AF37]/20 rounded-lg px-3 py-3 text-white text-sm focus:border-[#D4AF37] focus:outline-none appearance-none text-center"
+                data-testid="onboard-hour-input"
+              >
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                  <option key={h} value={String(h)}>{String(h).padStart(2, '0')}</option>
+                ))}
+              </select>
+              <span className="text-[#D4AF37] text-lg font-bold">:</span>
+              <select
+                value={formData.birth_minute}
+                onChange={e => setFormData(p => ({ ...p, birth_minute: e.target.value }))}
+                className="flex-1 bg-[#020617]/60 border border-[#D4AF37]/20 rounded-lg px-3 py-3 text-white text-sm focus:border-[#D4AF37] focus:outline-none appearance-none text-center"
+                data-testid="onboard-minute-input"
+              >
+                {Array.from({ length: 60 }, (_, i) => i).map(m => (
+                  <option key={m} value={String(m).padStart(2, '0')}>{String(m).padStart(2, '0')}</option>
+                ))}
+              </select>
+              <div className="flex rounded-lg overflow-hidden border border-[#D4AF37]/20">
+                <button
+                  type="button"
+                  onClick={() => setFormData(p => ({ ...p, birth_period: 'AM' }))}
+                  className={`px-3 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
+                    formData.birth_period === 'AM'
+                      ? 'bg-[#D4AF37] text-[#020617]'
+                      : 'bg-[#020617]/60 text-white/40 hover:text-white/70'
+                  }`}
+                  data-testid="onboard-am-btn"
+                >
+                  AM
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData(p => ({ ...p, birth_period: 'PM' }))}
+                  className={`px-3 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
+                    formData.birth_period === 'PM'
+                      ? 'bg-[#D4AF37] text-[#020617]'
+                      : 'bg-[#020617]/60 text-white/40 hover:text-white/70'
+                  }`}
+                  data-testid="onboard-pm-btn"
+                >
+                  PM
+                </button>
+              </div>
+            </div>
             <p className="text-[10px] text-white/20 mt-1">For maximum accuracy, include your birth time</p>
           </div>
         </div>

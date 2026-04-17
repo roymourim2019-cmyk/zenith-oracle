@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
@@ -33,6 +32,7 @@ import OnboardingFlow from "./components/OnboardingFlow";
 import DailyOracle from "./components/DailyOracle";
 import AlphaBriefing from "./components/AlphaBriefing";
 import { AdBanner } from "./components/AdComponents";
+import AdManager from "./AdManager";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -105,6 +105,8 @@ const App = () => {
       )}
 
       {shouldShowRating && <RatingPrompt onDismiss={dismissRating} />}
+
+      <AdManager />
     </div>
   );
 };
