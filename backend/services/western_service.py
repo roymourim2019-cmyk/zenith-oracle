@@ -61,7 +61,9 @@ class WesternAstrologyService:
         midheaven = ascmc[1]
         
         houses = [cusps[i] for i in range(12)]
-        
+
+        aspects = self._calculate_aspects(planets)
+
         return {
             'julian_day': jd,
             'chart_type': 'Western Tropical',
@@ -70,5 +72,39 @@ class WesternAstrologyService:
             'ascendant_sign': self.SIGN_NAMES[int(ascendant / 30) % 12],
             'midheaven': round(midheaven, 4),
             'midheaven_sign': self.SIGN_NAMES[int(midheaven / 30) % 12],
-            'houses': [round(h, 4) for h in houses]
+            'houses': [round(h, 4) for h in houses],
+            'aspects': aspects
         }
+
+    def _calculate_aspects(self, planets: list) -> list:
+        ASPECT_DEFS = [
+            ('Conjunction', 0, 8),
+            ('Opposition', 180, 8),
+            ('Trine', 120, 8),
+            ('Square', 90, 7),
+            ('Sextile', 60, 6),
+            ('Quincunx', 150, 3),
+            ('Semi-Sextile', 30, 2),
+        ]
+        aspects = []
+        for i in range(len(planets)):
+            for j in range(i + 1, len(planets)):
+                p1 = planets[i]
+                p2 = planets[j]
+                diff = abs(p1['longitude'] - p2['longitude'])
+                if diff > 180:
+                    diff = 360 - diff
+                for name, angle, orb in ASPECT_DEFS:
+                    if abs(diff - angle) <= orb:
+                        strength = round((1 - abs(diff - angle) / orb) * 100, 1)
+                        aspects.append({
+                            'planet1': p1['name'],
+                            'planet2': p2['name'],
+                            'aspect': name,
+                            'angle': round(diff, 2),
+                            'orb': round(abs(diff - angle), 2),
+                            'strength': strength,
+                        })
+                        break
+        aspects.sort(key=lambda a: a['strength'], reverse=True)
+        return aspects

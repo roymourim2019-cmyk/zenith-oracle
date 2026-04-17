@@ -1,31 +1,134 @@
 {
   "name": "Zenith Oracle - Cosmic Intelligence",
   "short_name": "Zenith Oracle",
-  "id": "zenith-oracle-app",
-  "description": "Scripture-Bound Deterministic Math. 100% Free. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris. Roy's Enterprise.",
-  "start_url": "/",
+  "id": "/",
+  "description": "Free astrology app with 100% scientific accuracy. Get your Vedic birth chart, Western horoscope, Chinese zodiac, Tarot readings, Numerology analysis and daily cosmic forecasts powered by Swiss Ephemeris (NASA JPL). Daily oracle, compatibility checker, 5 strategy games and AI-powered cosmic briefings.",
+  "start_url": "./",
+  "scope": "/",
   "display_override": ["window-controls-overlay"],
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
-  "theme_color": "#050505",
-  "background_color": "#050505",
+  "theme_color": "#020617",
+  "background_color": "#020617",
   "icons": [
     {
-      "src": "/assets/zenith-oracle-logo.png",
+      "src": "./assets/zenith-oracle-logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/zenith-oracle-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "screenshots": [
     {
-      "src": "/assets/screenshot1.png",
-      "sizes": "1080x1920",
+      "src": "./assets/screenshot_home.png",
+      "sizes": "412x915",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Zenith Oracle — Daily Oracle with real Swiss Ephemeris transits"
+      "label": "Home — Personalized cosmic greeting with daily streak and live transit ticker"
+    },
+    {
+      "src": "./assets/screenshot_daily.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Daily Oracle — Today's energy forecast with real Swiss Ephemeris transits"
+    },
+    {
+      "src": "./assets/screenshot_tarot.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tarot Oracle — 122 cards, 5 reading types personalized by birth chart"
+    },
+    {
+      "src": "./assets/screenshot_vedic.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vedic Zenith — Sidereal birth chart with Dasha and Pancha-Pakshi Oracle"
+    },
+    {
+      "src": "./assets/screenshot_compat.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Compatibility Checker — Cross-system partner match using Moon, Dasha and Chinese zodiac"
+    },
+    {
+      "src": "./assets/screenshot_matrix.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Sovereign Matrix — 11 modules of cosmic intelligence, all free"
+    },
+    {
+      "src": "./assets/screenshot_warroom.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "War Room — 5 strategy games forged from Swiss Ephemeris precision"
+    },
+    {
+      "src": "./assets/screenshot_numerology.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Numerology Vault — Chaldean, Pythagorean and Vedic triple-system analysis"
     }
   ],
-  "screenshots": []
+  "categories": ["lifestyle", "entertainment", "education"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Daily Oracle",
+      "short_name": "Daily",
+      "url": "/daily",
+      "description": "Today's cosmic energy forecast and card of the day",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Tarot Reading",
+      "short_name": "Tarot",
+      "url": "/tarot",
+      "description": "Get a personalized tarot card reading",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Vedic Birth Chart",
+      "short_name": "Vedic",
+      "url": "/vedic",
+      "description": "Calculate your Vedic sidereal birth chart",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Compatibility",
+      "short_name": "Match",
+      "url": "/compatibility",
+      "description": "Check zodiac compatibility with your partner",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    }
+  ]
 }

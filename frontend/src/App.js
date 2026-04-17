@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Sparkles, Sun, Moon, Zap, Hash, Mic, 
-  Crown, Eye, Heart, Swords, ChevronRight, Flame, Star, MapPin
+  Sparkles, Star, Moon, Sun, Zap, TrendingUp, 
+  Users, ChevronRight, Globe, Hash, Mic,
+  Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
+  Volume2, Crown, Eye, Scroll, Heart, Download, X, Flame, Bell, BellRing
 } from "lucide-react";
 import "@/App.css";
 
@@ -18,6 +20,11 @@ import TarotReader from "./components/TarotReader";
 import CompatibilityChecker from "./components/CompatibilityChecker";
 import DailyOracle from "./components/DailyOracle";
 import AlphaBriefing from "./components/AlphaBriefing";
+import { AdBanner } from "./components/AdComponents";
+import AdManager from "./AdManager";
+import ChartPDFUnlock from "./components/ChartPDFUnlock";
+import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
+import { usePushNotifications } from "./hooks/usePushNotifications";
 
 // Custom Hooks 
 import { useUserProfile, useStreak, useRatingPrompt } from "./hooks/useAppFeatures";
@@ -56,6 +63,8 @@ const App = () => {
       </BrowserRouter>
 
       {shouldShowRating && <RatingPrompt onDismiss={dismissRating} />}
+
+      <AdManager />
     </div>
   );
 };
@@ -74,6 +83,20 @@ const BirthDataLogin = ({ onSave }) => {
     if (formData.name && formData.dob) {
       onSave(formData);
     }
+  };
+
+/* ───────── HOME PAGE ───────── */
+const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismissInstall }) => {
+  const { isSupported: notifSupported, isSubscribed: notifSubscribed, subscribe: notifSubscribe } = usePushNotifications();
+  const [notifDismissed, setNotifDismissed] = useState(() => !!localStorage.getItem('zenith_notif_dismissed'));
+
+  const handleNotifSubscribe = async () => {
+    await notifSubscribe(profile?.name);
+    setNotifDismissed(true);
+  };
+  const dismissNotif = () => {
+    localStorage.setItem('zenith_notif_dismissed', 'true');
+    setNotifDismissed(true);
   };
 
   return (
@@ -111,6 +134,34 @@ const BirthDataLogin = ({ onSave }) => {
                 onChange={(e) => setFormData({...formData, dob: e.target.value})}
               />
             </div>
+          </nav>
+        </header>
+
+        {/* Install Banner */}
+        {canInstall && (
+          <InstallBanner onInstall={onInstall} onDismiss={onDismissInstall} />
+        )}
+
+        {/* Push Notification Opt-In */}
+        {notifSupported && !notifSubscribed && !notifDismissed && profile && (
+          <NotificationBanner onSubscribe={handleNotifSubscribe} onDismiss={dismissNotif} />
+        )}
+
+        {/* Personalized Greeting */}
+        {profile && (
+          <div className="container mx-auto px-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card rounded-2xl p-4 mb-6 flex items-center justify-between">
+              <div>
+                <p className="text-sm text-white/80">Welcome back, <span className="text-[#D4AF37] font-semibold">{profile.name}</span></p>
+                <p className="text-[10px] text-white/30 mt-0.5">Born: {profile.birth_date} | The cosmos remembers you</p>
+              </div>
+              {streak.count >= 3 && (
+                <div className="text-right">
+                  <p className="text-xs text-[#D4AF37]">{streak.count >= 7 ? 'Cosmic Master' : streak.count >= 3 ? 'Rising Oracle' : ''}</p>
+                  <p className="text-[10px] text-white/20">Best: {streak.best} days</p>
+                </div>
+              )}
+            </motion.div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -151,32 +202,60 @@ const Home = ({ profile, streak }) => {
           <span className="text-[9px] text-[#D4AF37] font-black uppercase tracking-[0.3em] mb-1">Authenticated User</span>
           <h1 className="text-2xl font-bold tracking-tighter uppercase" style={{fontFamily: 'Playfair Display'}}>{profile.name}</h1>
         </div>
-        <div className="flex gap-2">
-            <div className="bg-[#D4AF37]/10 px-4 py-2 rounded-2xl border border-[#D4AF37]/20 flex items-center gap-2">
-                <Flame className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
-                <span className="text-xs font-black text-[#D4AF37]">{streak.count}</span>
-            </div>
-        </div>
-      </header>
 
-      <main className="px-8">
-        <motion.div 
-            whileTap={{ scale: 0.98 }}
-            onClick={() => navigate('/daily')} 
-            className="mb-8 p-8 rounded-[40px] bg-gradient-to-br from-[#D4AF37]/20 via-[#D4AF37]/5 to-transparent border border-[#D4AF37]/30 cursor-pointer"
-        >
-            <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold leading-tight" style={{fontFamily: 'Playfair Display'}}>Today's Divine<br/>Manifesto</h2>
-                <div className="p-3 bg-white/10 rounded-full"><ChevronRight className="w-5 h-5" /></div>
-            </div>
-            <p className="text-white/40 text-xs leading-relaxed">Based on your birth at {profile.dob}, the current planetary transits are focusing energy on your 10th house of career.</p>
-        </motion.div>
+        {/* Birth Chart PDF — Rewarded Video Unlock */}
+        {profile && (
+          <div className="container mx-auto px-6 py-4">
+            <ChartPDFUnlock profile={profile} />
+          </div>
+        )}
 
-        <div className="grid grid-cols-2 gap-4">
-          <MenuCard icon={<Moon />} title="Vedic Mastery" path="/vedic" />
-          <MenuCard icon={<Sun />} title="Western Path" path="/western" />
-          <MenuCard icon={<Hash />} title="Numerology" path="/numerology" />
-          <MenuCard icon={<Sparkles />} title="Tarot Truth" path="/tarot" />
+        {/* Sovereign 9 Matrix (now with Compatibility) */}
+        <section className="container mx-auto px-6 py-16">
+          <div className="text-center mb-10">
+            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3" style={{fontFamily: 'Playfair Display, serif'}}>
+              The <span className="text-[#D4AF37]">Sovereign Matrix</span>
+            </h3>
+            <p className="text-sm text-white/40">Ten modules of cosmic intelligence — all free, forever</p>
+          </div>
+          <div className="sovereign-grid">
+            <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Daily Oracle" description="Free daily horoscope + Card of the Day. Unlock extended Career/Love/Health insights." link="/daily" isNew />
+            <FeatureCard icon={<Mic className="w-10 h-10 text-[#D4AF37]" />} title="Alpha Briefing" description="60-second AI morning strategy audio. Real transits + Gemini intelligence." link="/alpha-briefing" isNew />
+            <FeatureCard icon={<Moon className="w-10 h-10 text-[#D4AF37]" />} title="Vedic Zenith" description="D1-D60 divisional charts, Vimshottari Dasha, Pancha-Pakshi Oracle" link="/vedic" />
+            <FeatureCard icon={<Sun className="w-10 h-10 text-[#D4AF37]" />} title="Western Zenith" description="Tropical zodiac, Placidus houses, planetary aspects analysis" link="/western" />
+            <FeatureCard icon={<Sparkles className="w-10 h-10 text-[#D4AF37]" />} title="Tarot Oracle" description="78+44 cards, 5 reading types, personalized deck weighting" link="/tarot" />
+            <FeatureCard icon={<Hash className="w-10 h-10 text-[#D4AF37]" />} title="Numerology Vault" description="Chaldean, Pythagorean & Vedic triple-system analysis" link="/numerology" />
+            <FeatureCard icon={<Globe className="w-10 h-10 text-[#D4AF37]" />} title="Chinese Oracle" description="Lunisolar zodiac, Five Elements, Yin-Yang compatibility" link="/chinese" />
+            <FeatureCard icon={<Heart className="w-10 h-10 text-[#D4AF37]" />} title="Compatibility" description="Cross-system partner match: Moon + Dasha + Numerology + Chinese" link="/compatibility" isNew />
+            <FeatureCard icon={<Zap className="w-10 h-10 text-[#D4AF37]" />} title="Power Meter" description="0-100% dominance gauge from real-time planetary transits" link="/power-meter" />
+            <FeatureCard icon={<Scroll className="w-10 h-10 text-[#D4AF37]" />} title="Scriptural Synthesis" description="Cross-system verdict: all five traditions converged" link="/synthesis" />
+            <FeatureCard icon={<Eye className="w-10 h-10 text-[#D4AF37]" />} title="Accuracy Lab" description="Engine status, Delta-T, Ayanamsha live monitoring" link="/accuracy-lab" />
+          </div>
+        </section>
+
+        {/* WAR ROOM */}
+        <section className="container mx-auto px-6 py-16 relative" style={{ zIndex: 100, overflow: 'visible', height: 'auto' }} id="war-room" data-testid="war-room-section">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 text-center">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] mb-3 war-room-pulse" style={{ fontFamily: 'Playfair Display, serif' }} data-testid="war-room-header">
+              THE WAR ROOM
+            </h3>
+            <p className="text-[#94A3B8] text-base max-w-2xl mx-auto">
+              Five celestial battlegrounds forged from Swiss Ephemeris precision. Enter, compete, dominate.
+            </p>
+          </motion.div>
+
+          <div className="flex flex-wrap justify-center gap-5" style={{ overflow: 'visible', minHeight: 'auto' }}>
+            <GameCard icon={<TrendingUp className="w-9 h-9 text-[#D4AF37]" />} title="Market Siege" description="60-second numerology battle — crush opponents with your name vibration." link="/market-siege" badge="Numerology" index={0} />
+            <GameCard icon={<Eye className="w-9 h-9 text-[#D4AF37]" />} title="Oracle's Trial" description="5-round tarot intuition challenge — identify true meanings." link="/oracles-trial" badge="Tarot" index={1} />
+            <GameCard icon={<Activity className="w-9 h-9 text-[#D4AF37]" />} title="Vortex Velocity" description="Lock planetary degrees with arc-second precision." link="/vortex-velocity" badge="Transit" index={2} />
+            <GameCard icon={<Volume2 className="w-9 h-9 text-[#D4AF37]" />} title="Aura Alignment" description="Match your frequency to the Moon's Solfeggio tone." link="/aura-alignment" badge="Solfeggio" index={3} />
+            <GameCard icon={<Crown className="w-9 h-9 text-[#D4AF37]" />} title="Sovereign Duel" description="Chart vs. Chart — seven planets clash for supremacy." link="/sovereign-duel" badge="Vedic" index={4} />
+          </div>
+        </section>
+
+        {/* Bottom Ad */}
+        <div className="container mx-auto px-6 py-4">
+          <AdBanner slot="home-bottom" />
         </div>
       </main>
 
@@ -201,19 +280,70 @@ const MenuCard = ({ icon, title, path }) => {
   );
 };
 
-const BottomNav = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    if (location.pathname === '/') return null;
+/* ───────── Notification Banner ───────── */
+const NotificationBanner = ({ onSubscribe, onDismiss }) => (
+  <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-6 mb-4" data-testid="notification-banner">
+    <div className="glass-card rounded-2xl p-4 flex items-center justify-between border-[#D4AF37]/20">
+      <div className="flex items-center gap-3">
+        <BellRing className="w-6 h-6 text-[#D4AF37]" />
+        <div>
+          <p className="text-sm text-white font-semibold">Daily Oracle Digest</p>
+          <p className="text-[10px] text-white/30">Get your cosmic energy update every morning</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <button onClick={onSubscribe} className="bg-[#D4AF37] text-[#020617] font-bold py-2 px-5 rounded-lg text-xs uppercase tracking-widest" data-testid="notif-subscribe-btn">
+          Enable
+        </button>
+        <button onClick={onDismiss} className="text-white/20 hover:text-white/40 transition-colors" data-testid="dismiss-notif-btn">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  </motion.div>
+);
 
-    return (
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-[#0f172a]/95 backdrop-blur-3xl border border-white/10 rounded-[35px] h-20 flex items-center justify-around px-4 z-[500] shadow-2xl">
-        <NavButton icon={<Sun />} onClick={() => navigate('/')} label="Home" active={location.pathname === '/'} />
-        <NavButton icon={<Eye />} onClick={() => navigate('/dashboard')} label="Matrix" active={location.pathname === '/dashboard'} />
-        <NavButton icon={<Heart />} onClick={() => navigate('/compatibility')} label="Synastry" active={location.pathname === '/compatibility'} />
-        <NavButton icon={<Mic />} onClick={() => navigate('/alpha-briefing')} label="Vocal" active={location.pathname === '/alpha-briefing'} />
-      </nav>
-    );
+/* ───────── Starfield ───────── */
+const Starfield = () => {
+  useEffect(() => {
+    const container = document.getElementById('starfield-container');
+    if (!container) return;
+    
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.opacity = Math.random() * 0.5 + 0.2;
+      container.appendChild(star);
+    }
+    
+    const handleOrientation = (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        const x = Math.min(Math.max(e.gamma, -30), 30) / 30;
+        const y = Math.min(Math.max(e.beta - 45, -30), 30) / 30;
+        container.style.transform = `translate(${x * 8}px, ${y * 8}px)`;
+      }
+    };
+    const handleMouse = (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      container.style.transform = `translate(${x * 6}px, ${y * 6}px)`;
+    };
+    
+    if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', handleOrientation);
+    window.addEventListener('mousemove', handleMouse);
+    container.classList.add('starfield-parallax');
+    
+    return () => {
+      if (container) container.innerHTML = '';
+      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener('mousemove', handleMouse);
+    };
+  }, []);
+  
+  return <div id="starfield-container" className="starfield" />;
 };
 
 const NavButton = ({ icon, onClick, label, active }) => (

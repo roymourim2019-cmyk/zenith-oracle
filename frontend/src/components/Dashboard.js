@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const userTier = 'free'; // App is now 100% free + ad-supported
 
   const [formData, setFormData] = useState({
     name: '',
@@ -189,32 +190,7 @@ const Dashboard = () => {
               </a>
             </div>
             
-            {userTier === 'free' && (
-              <div className="glass-card rounded-2xl p-6 border-[#D4AF37]/40">
-                <h3 className="text-xl font-bold text-white mb-4">Unlock Premium</h3>
-                <ul className="space-y-2 mb-4 text-sm text-white/80">
-                  <li className="flex items-start">
-                    <Star className="w-4 h-4 text-[#D4AF37] mr-2 mt-0.5 flex-shrink-0" />
-                    Ad-free experience
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="w-4 h-4 text-[#D4AF37] mr-2 mt-0.5 flex-shrink-0" />
-                    All D1-D60 charts
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="w-4 h-4 text-[#D4AF37] mr-2 mt-0.5 flex-shrink-0" />
-                    AI Daily Briefings
-                  </li>
-                </ul>
-                <button
-                  onClick={() => setShowPayment(true)}
-                  className="w-full bg-[#D4AF37] text-[#020617] font-bold py-3 hover:bg-[#F3E5AB] transition-all duration-300 uppercase tracking-widest text-sm"
-                  data-testid="upgrade-sidebar-button"
-                >
-                  Upgrade Now
-                </button>
-              </div>
-            )}
+            {/* App is 100% free + ad-supported - no premium tier */}
           </div>
         </div>
       </div>
