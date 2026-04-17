@@ -8,6 +8,7 @@ from .synthesis import router as synthesis_router
 from .ai import router as ai_router
 from .system import router as system_router
 from .notifications import router as notifications_router
+from .pdf_report import router as pdf_router
 
 all_routers = [
     vedic_router,
@@ -20,4 +21,5 @@ all_routers = [
     ai_router,
     system_router,
     notifications_router,
+    pdf_router,
 ]

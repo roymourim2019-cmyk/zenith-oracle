@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     # Emergent LLM Key (for Gemini)
     emergent_llm_key: str = os.getenv('EMERGENT_LLM_KEY', '')
     
+    # VAPID (Push Notifications)
+    vapid_public_key: str = os.getenv('VAPID_PUBLIC_KEY', '')
+    vapid_private_key: str = os.getenv('VAPID_PRIVATE_KEY', '')
+    vapid_contact: str = os.getenv('VAPID_CONTACT', 'mailto:admin@roysenterprise.com')
+    
     # CORS
     cors_origins: str = os.getenv('CORS_ORIGINS', '*')
     

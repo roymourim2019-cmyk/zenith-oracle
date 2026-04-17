@@ -33,6 +33,7 @@ import DailyOracle from "./components/DailyOracle";
 import AlphaBriefing from "./components/AlphaBriefing";
 import { AdBanner } from "./components/AdComponents";
 import AdManager from "./AdManager";
+import ChartPDFUnlock from "./components/ChartPDFUnlock";
 import { useUserProfile, useStreak, useReadingsCount, useRatingPrompt, useInstallPrompt } from "./hooks/useAppFeatures";
 import { usePushNotifications } from "./hooks/usePushNotifications";
 
@@ -280,6 +281,13 @@ const Home = ({ profile, streak, readingsCount, canInstall, onInstall, onDismiss
         <div className="container mx-auto px-6 py-4">
           <AdBanner slot="home-top" />
         </div>
+
+        {/* Birth Chart PDF — Rewarded Video Unlock */}
+        {profile && (
+          <div className="container mx-auto px-6 py-4">
+            <ChartPDFUnlock profile={profile} />
+          </div>
+        )}
 
         {/* Sovereign 9 Matrix (now with Compatibility) */}
         <section className="container mx-auto px-6 py-16">

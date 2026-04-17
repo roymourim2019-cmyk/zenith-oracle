@@ -3,11 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from pathlib import Path
+import asyncio
 import logging
 
 from core.config import settings
 from core.redis_client import redis_client
 from services.gemini_service import GeminiService
+from services.notification_scheduler import daily_notification_scheduler
 from routes import all_routers
 
 ROOT_DIR = Path(__file__).parent
@@ -19,8 +21,10 @@ gemini_service = GeminiService()
 async def lifespan(app: FastAPI):
     await redis_client.connect()
     await gemini_service.initialize()
-    logging.info("All services initialized")
+    scheduler_task = asyncio.create_task(daily_notification_scheduler())
+    logging.info("All services initialized (push scheduler started)")
     yield
+    scheduler_task.cancel()
     await redis_client.disconnect()
     logging.info("All services shut down")
 
