@@ -6,6 +6,7 @@
   "start_url": "/",
   "display_override": ["window-controls-overlay"],
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
   "theme_color": "#050505",
   "background_color": "#050505",
@@ -26,7 +27,5 @@
       "label": "Zenith Oracle — Daily Oracle with real Swiss Ephemeris transits"
     }
   ],
-  "categories": ["lifestyle", "entertainment", "education"],
-  "lang": "en",
-  "dir": "ltr"
+  "screenshots": []
 }
