@@ -1,3 +1,10 @@
+const [isLoggedIn, setIsLoggedIn] = React.useState(localStorage.getItem('zenith_auth') === 'true');
+
+const handleLogout = () => {
+  localStorage.removeItem('zenith_auth');
+  setIsLoggedIn(false);
+  window.location.reload(); 
+};
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
