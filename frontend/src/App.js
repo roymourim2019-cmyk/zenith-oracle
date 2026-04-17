@@ -7,7 +7,7 @@ import {
   Gamepad2, Home as HomeIcon, LayoutDashboard, Swords, Activity,
   Volume2, Crown, Eye, Scroll, Heart, Download, X, Flame, Bell, BellRing
 } from "lucide-react";
-import "@/App.css";
+import "./App.css";
 import Dashboard from "./components/Dashboard";
 import VedicChart from "./components/VedicChart";
 import WesternChart from "./components/WesternChart";
