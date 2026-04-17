@@ -1,128 +1,128 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, Star, Sparkles, Eye, Clock } from 'lucide-react';
+import { X, Star, Sparkles, Eye, Clock, Gift } from 'lucide-react';
 
 /*
- * AdManager — Zenith Oracle Revenue Engine
+ * AdManager — Zenith Oracle Revenue Engine v2
  * 
- * Ad Scheduling Logic:
- * - Triggers every 3–5 minutes (randomized)
- * - Ad patterns rotate randomly:
- *   (A) Burst: 3 consecutive 5-second ads
- *   (B) Double: 2 consecutive 20-second ads
- *   (C) Single Long: 1 ad of 15–30 seconds, skippable after 5–10s
- *   (D) Single Short: 1 ad of 10–15 seconds, skippable after 5s
- * - Minimum 2 skippable ad experiences per session
- * - Non-intrusive placement with cosmic branding
+ * REVENUE TARGET: ₹50,000/month from 1,000 downloads (Western markets)
+ * 
+ * Math: 1,000 downloads × 30% DAU = 300 daily active users
+ * Per user/month: ~$2 needed ($600 total ≈ ₹50,000)
+ * 
+ * Strategy: RETENTION-FIRST (users must love the app to keep coming back)
+ * 
+ * Ad Schedule:
+ * - First ad: after 5 minutes (let user engage first)
+ * - Subsequent ads: every 6-8 minutes (randomized)
+ * - All interstitials skippable after 5 seconds
+ * - Max 4 interstitials per session (hard cap)
+ * - Session = 1 app open
+ * 
+ * Revenue Sources (in order of CPM):
+ * 1. Rewarded Video ($20-40 CPM): User-initiated, highest value, zero churn
+ *    - Already integrated: Daily Oracle extended, Alpha Briefing, Cosmic Reset ×5
+ * 2. Interstitial ($8-15 CPM): Between page transitions, always skippable
+ *    - This AdManager handles these
+ * 3. Banner ($2-5 CPM): Static, non-intrusive, on all pages
+ *    - Already integrated: AdBanner component on all result pages
+ * 
+ * Projection at US/UK/AU CPMs:
+ * - Rewarded: 1.5/day × 30 = 45 views × $30 CPM = $1.35
+ * - Interstitial: 3/day × 30 = 90 views × $10 CPM = $0.90
+ * - Banner: 8/day × 30 = 240 views × $3 CPM = $0.72
+ * - Total: ~$2.97/user/month × 300 DAU = $891 ≈ ₹74,000
  */
 
-const AD_PATTERNS = [
-  { id: 'burst_short', label: 'Cosmic Burst', ads: [5, 5, 5], skippable: false },
-  { id: 'double_medium', label: 'Celestial Pair', ads: [20, 20], skippable: false },
-  { id: 'single_long', label: 'Astral Vision', ads: [30], skippable: true, skipAfter: 10 },
-  { id: 'single_medium', label: 'Stellar Flash', ads: [15], skippable: true, skipAfter: 5 },
-  { id: 'single_short', label: 'Cosmic Glimpse', ads: [10], skippable: true, skipAfter: 5 },
-];
-
 const AD_CREATIVES = [
-  { headline: 'Unlock Your Cosmic Potential', body: 'Premium partners aligned with your stars', icon: 'star' },
-  { headline: 'The Universe Speaks', body: 'Discover what the planets have planned for you', icon: 'sparkle' },
-  { headline: 'Celestial Insights Await', body: 'Your destiny is written in the stars — explore now', icon: 'eye' },
-  { headline: 'Stellar Alignment Detected', body: 'A rare cosmic window has opened for seekers like you', icon: 'volume' },
-  { headline: 'Your Oracle Transmission', body: 'The cosmos channels a message through this moment', icon: 'clock' },
+  { headline: 'Cosmic Alignment Detected', body: 'A rare planetary window opens — explore deeper insights', icon: 'star' },
+  { headline: 'The Stars Have Spoken', body: 'Your cosmic DNA holds secrets waiting to be unlocked', icon: 'sparkle' },
+  { headline: 'Celestial Update', body: 'Premium partners aligned with your zodiac energy', icon: 'eye' },
+  { headline: 'Oracle Transmission', body: 'The universe channels wisdom through this moment', icon: 'clock' },
+  { headline: 'Stellar Opportunity', body: 'Discover what the planetary transits have prepared for you', icon: 'gift' },
 ];
 
-const getRandomInterval = () => {
-  const min = 3 * 60 * 1000;
-  const max = 5 * 60 * 1000;
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+const FIRST_AD_DELAY = 5 * 60 * 1000;
+const MIN_INTERVAL = 6 * 60 * 1000;
+const MAX_INTERVAL = 8 * 60 * 1000;
+const AD_DURATION = 15;
+const SKIP_AFTER = 5;
+const MAX_ADS_PER_SESSION = 4;
+
+const getRandomInterval = () =>
+  Math.floor(Math.random() * (MAX_INTERVAL - MIN_INTERVAL + 1)) + MIN_INTERVAL;
 
 const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-const getIconComponent = (iconName) => {
-  switch (iconName) {
-    case 'star': return <Star className="w-8 h-8 text-[#D4AF37]" />;
-    case 'sparkle': return <Sparkles className="w-8 h-8 text-[#D4AF37]" />;
-    case 'eye': return <Eye className="w-8 h-8 text-[#D4AF37]" />;
-    case 'volume': return <Volume2 className="w-8 h-8 text-[#D4AF37]" />;
-    case 'clock': return <Clock className="w-8 h-8 text-[#D4AF37]" />;
-    default: return <Sparkles className="w-8 h-8 text-[#D4AF37]" />;
+const getIcon = (name) => {
+  const cls = "w-8 h-8 text-[#D4AF37]";
+  switch (name) {
+    case 'star': return <Star className={cls} />;
+    case 'sparkle': return <Sparkles className={cls} />;
+    case 'eye': return <Eye className={cls} />;
+    case 'clock': return <Clock className={cls} />;
+    case 'gift': return <Gift className={cls} />;
+    default: return <Sparkles className={cls} />;
   }
 };
 
 const AdManager = () => {
-  const [activeAd, setActiveAd] = useState(null);
-  const [adQueue, setAdQueue] = useState([]);
-  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const [showAd, setShowAd] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [canSkip, setCanSkip] = useState(false);
   const [creative, setCreative] = useState(null);
-  const [sessionAdCount, setSessionAdCount] = useState(0);
-  const timerRef = useRef(null);
-  const intervalRef = useRef(null);
-  const skipTimerRef = useRef(null);
-  const skippableCountRef = useRef(0);
+  const sessionAdCount = useRef(0);
+  const scheduleTimer = useRef(null);
+  const countdownTimer = useRef(null);
+  const skipTimer = useRef(null);
+  const isFirstAd = useRef(true);
 
-  const startAdSequence = useCallback(() => {
-    let pattern;
-    if (skippableCountRef.current < 2) {
-      const skippablePatterns = AD_PATTERNS.filter(p => p.skippable);
-      pattern = pickRandom(skippablePatterns);
-      skippableCountRef.current += 1;
-    } else {
-      pattern = pickRandom(AD_PATTERNS);
-      if (pattern.skippable) skippableCountRef.current += 1;
+  const triggerAd = useCallback(() => {
+    if (sessionAdCount.current >= MAX_ADS_PER_SESSION) return;
+    if (document.hidden) {
+      scheduleNext();
+      return;
     }
-
-    const queue = pattern.ads.map((duration, i) => ({
-      duration,
-      skippable: pattern.skippable,
-      skipAfter: pattern.skipAfter || 5,
-      creative: pickRandom(AD_CREATIVES),
-      index: i,
-      total: pattern.ads.length,
-      patternLabel: pattern.label,
-    }));
-
-    setAdQueue(queue);
-    setCurrentAdIndex(0);
-    setActiveAd(queue[0]);
-    setCreative(queue[0].creative);
-    setTimeLeft(queue[0].duration);
+    setCreative(pickRandom(AD_CREATIVES));
+    setTimeLeft(AD_DURATION);
     setCanSkip(false);
+    setShowAd(true);
+    sessionAdCount.current += 1;
   }, []);
 
-  useEffect(() => {
-    const scheduleNext = () => {
-      const delay = getRandomInterval();
-      timerRef.current = setTimeout(() => {
-        startAdSequence();
-        scheduleNext();
-      }, delay);
-    };
+  const scheduleNext = useCallback(() => {
+    if (sessionAdCount.current >= MAX_ADS_PER_SESSION) return;
+    const delay = isFirstAd.current ? FIRST_AD_DELAY : getRandomInterval();
+    isFirstAd.current = false;
+    scheduleTimer.current = setTimeout(triggerAd, delay);
+  }, [triggerAd]);
 
+  const closeAd = useCallback(() => {
+    setShowAd(false);
+    setCanSkip(false);
+    if (countdownTimer.current) clearInterval(countdownTimer.current);
+    if (skipTimer.current) clearTimeout(skipTimer.current);
     scheduleNext();
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [startAdSequence]);
+  }, [scheduleNext]);
 
   useEffect(() => {
-    if (!activeAd) return;
+    scheduleNext();
+    return () => {
+      if (scheduleTimer.current) clearTimeout(scheduleTimer.current);
+      if (countdownTimer.current) clearInterval(countdownTimer.current);
+      if (skipTimer.current) clearTimeout(skipTimer.current);
+    };
+  }, [scheduleNext]);
 
-    if (activeAd.skippable && activeAd.skipAfter > 0) {
-      skipTimerRef.current = setTimeout(() => {
-        setCanSkip(true);
-      }, activeAd.skipAfter * 1000);
-    }
+  useEffect(() => {
+    if (!showAd) return;
 
-    intervalRef.current = setInterval(() => {
-      setTimeLeft(prev => {
+    skipTimer.current = setTimeout(() => setCanSkip(true), SKIP_AFTER * 1000);
+
+    countdownTimer.current = setInterval(() => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          advanceOrClose();
+          closeAd();
           return 0;
         }
         return prev - 1;
@@ -130,42 +130,14 @@ const AdManager = () => {
     }, 1000);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (skipTimerRef.current) clearTimeout(skipTimerRef.current);
+      if (countdownTimer.current) clearInterval(countdownTimer.current);
+      if (skipTimer.current) clearTimeout(skipTimer.current);
     };
-  }, [activeAd]);
+  }, [showAd, closeAd]);
 
-  const advanceOrClose = () => {
-    const nextIndex = currentAdIndex + 1;
-    if (nextIndex < adQueue.length) {
-      const nextAd = adQueue[nextIndex];
-      setCurrentAdIndex(nextIndex);
-      setActiveAd(nextAd);
-      setCreative(nextAd.creative);
-      setTimeLeft(nextAd.duration);
-      setCanSkip(false);
-    } else {
-      closeAd();
-    }
-  };
+  if (!showAd || !creative) return null;
 
-  const closeAd = () => {
-    setActiveAd(null);
-    setAdQueue([]);
-    setCurrentAdIndex(0);
-    setCanSkip(false);
-    setSessionAdCount(prev => prev + 1);
-  };
-
-  const handleSkip = () => {
-    if (canSkip) {
-      advanceOrClose();
-    }
-  };
-
-  if (!activeAd || !creative) return null;
-
-  const progressPercent = ((activeAd.duration - timeLeft) / activeAd.duration) * 100;
+  const progress = ((AD_DURATION - timeLeft) / AD_DURATION) * 100;
 
   return (
     <AnimatePresence>
@@ -173,99 +145,89 @@ const AdManager = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/92 backdrop-blur-md z-[500] flex items-center justify-center"
+        className="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] flex items-center justify-center"
         data-testid="ad-manager-overlay"
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
+          initial={{ opacity: 0, scale: 0.94, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 20 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          exit={{ opacity: 0, scale: 0.94, y: 16 }}
+          transition={{ type: 'spring', damping: 28, stiffness: 320 }}
           className="relative w-full max-w-md mx-4"
         >
-          {/* Ad Counter (for burst patterns) */}
-          {activeAd.total > 1 && (
-            <div className="text-center mb-3" data-testid="ad-sequence-counter">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
-                {activeAd.patternLabel} — {activeAd.index + 1} of {activeAd.total}
-              </span>
-            </div>
+          {/* Skip button - top right, always visible once available */}
+          {canSkip && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              onClick={closeAd}
+              className="absolute -top-12 right-0 flex items-center gap-1.5 text-sm text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
+              data-testid="ad-skip-btn"
+            >
+              Skip <X className="w-4 h-4" />
+            </motion.button>
           )}
 
-          {/* Ad Card */}
-          <div className="rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-b from-[#0a0f2e] to-[#020617] overflow-hidden shadow-[0_0_60px_rgba(212,175,55,0.12)]">
-            {/* Shimmering top border */}
-            <div className="h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
+          <div className="rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-b from-[#0a0f2e] to-[#020617] overflow-hidden shadow-[0_0_60px_rgba(212,175,55,0.08)]">
+            <div className="h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
 
-            {/* Ad Content */}
             <div className="p-8 text-center">
-              <div className="w-16 h-16 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center mx-auto mb-5">
-                {getIconComponent(creative.icon)}
+              <div className="w-14 h-14 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center mx-auto mb-5">
+                {getIcon(creative.icon)}
               </div>
 
-              <p className="text-[9px] uppercase tracking-[0.3em] text-[#D4AF37]/50 mb-3">Sponsored Cosmic Transmission</p>
+              <p className="text-[9px] uppercase tracking-[0.3em] text-[#D4AF37]/40 mb-3">Sponsored</p>
 
-              <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <h3
+                className="text-xl font-bold text-white mb-2"
+                style={{ fontFamily: 'Playfair Display, serif' }}
+              >
                 {creative.headline}
               </h3>
-              <p className="text-sm text-white/50 leading-relaxed mb-6">
+              <p className="text-sm text-white/45 leading-relaxed mb-6">
                 {creative.body}
               </p>
 
-              {/* Simulated ad visual */}
-              <div className="rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/15 p-6 mb-6">
-                <div className="flex items-center justify-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 animate-pulse" />
+              {/* Ad placement visual */}
+              <div className="rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/10 p-5 mb-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 animate-pulse" />
                   <div className="flex-1 space-y-2 text-left">
-                    <div className="h-2.5 bg-[#D4AF37]/15 rounded w-3/4 animate-pulse" />
+                    <div className="h-2.5 bg-[#D4AF37]/10 rounded w-3/4 animate-pulse" />
                     <div className="h-2 bg-white/5 rounded w-1/2 animate-pulse" />
                   </div>
                 </div>
-                <div className="h-24 rounded-lg bg-gradient-to-br from-[#D4AF37]/8 to-[#0a0f2e] flex items-center justify-center">
-                  <span className="text-xs text-white/20">Ad Placement</span>
+                <div className="h-20 rounded-lg bg-gradient-to-br from-[#D4AF37]/5 to-[#0a0f2e] flex items-center justify-center">
+                  <span className="text-xs text-white/15">Ad Content</span>
                 </div>
               </div>
 
-              {/* Progress Bar */}
-              <div className="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-3" data-testid="ad-progress-bar">
+              {/* Progress bar */}
+              <div className="relative w-full h-1 bg-white/8 rounded-full overflow-hidden mb-3" data-testid="ad-progress-bar">
                 <motion.div
-                  className="absolute top-0 left-0 h-full bg-[#D4AF37] rounded-full"
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 0.3, ease: 'linear' }}
+                  className="absolute top-0 left-0 h-full bg-[#D4AF37]/60 rounded-full"
+                  style={{ width: `${progress}%` }}
+                  transition={{ duration: 0.3 }}
                 />
               </div>
 
-              {/* Timer + Controls */}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] text-white/25 tabular-nums" data-testid="ad-timer">
-                  {timeLeft}s remaining
+                <span className="text-[10px] text-white/20 tabular-nums" data-testid="ad-timer">
+                  {timeLeft}s
                 </span>
-
-                {activeAd.skippable ? (
-                  canSkip ? (
-                    <button
-                      onClick={handleSkip}
-                      className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white border border-white/20 hover:border-white/40 px-3 py-1.5 rounded-lg transition-all"
-                      data-testid="ad-skip-btn"
-                    >
-                      Skip <X className="w-3 h-3" />
-                    </button>
-                  ) : (
-                    <span className="text-[10px] text-white/20" data-testid="ad-skip-countdown">
-                      Skip in {Math.max(0, activeAd.skipAfter - (activeAd.duration - timeLeft))}s
-                    </span>
-                  )
-                ) : (
-                  <span className="text-[10px] text-white/15 italic">Non-skippable</span>
+                {!canSkip && (
+                  <span className="text-[10px] text-white/20" data-testid="ad-skip-countdown">
+                    Skip in {Math.max(0, SKIP_AFTER - (AD_DURATION - timeLeft))}s
+                  </span>
                 )}
               </div>
             </div>
 
-            {/* Bottom border */}
-            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent" />
             <div className="px-6 py-2 text-center">
-              <span className="text-[8px] text-white/10 uppercase tracking-widest">Supporting free cosmic wisdom for all seekers</span>
+              <span className="text-[8px] text-white/8 uppercase tracking-widest">
+                Supporting free cosmic wisdom for all
+              </span>
             </div>
           </div>
         </motion.div>
