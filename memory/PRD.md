@@ -62,6 +62,10 @@
 - [x] Ad banners on ALL result pages and game results
 - [x] Share buttons on ALL results
 - [x] Onboarding, streak, PWA, compatibility, rating prompt
+- [x] White-label: "Made with Emergent" badge completely removed (Feb 2026)
+- [x] AM/PM birth time selector in OnboardingFlow (Feb 2026)
+- [x] AdManager.js revenue engine — interstitial ads every 3-5 min with varied patterns (Feb 2026)
+- [x] Footer shows only "© 2026 Roy's Enterprise. All Rights Reserved." (Feb 2026)
 
 ## Remaining Backlog (P2)
 - [ ] Refactor server.py into /routes/ directory
