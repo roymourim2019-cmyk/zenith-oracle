@@ -39,7 +39,7 @@ const PaymentModal = ({ onClose, onSuccess, currency = "INR" }) => {
       });
 
       const options = {
-        key: 'rzp_test_1DP5mmOlF5G5ag',
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag',
         amount: orderResponse.data.amount,
         currency: currency === 'INR' ? 'INR' : 'USD',
         name: 'Zenith Oracle',
