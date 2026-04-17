@@ -6,7 +6,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay"],
+  "display_override": ["window-controls-overlay", "tabbed"],
   "orientation": "portrait",
   "theme_color": "#020617",
   "background_color": "#020617",
@@ -14,8 +14,68 @@
   "dir": "ltr",
   "categories": ["lifestyle", "entertainment"],
   "prefer_related_applications": false,
-  "iarc_rating_id": "",
-  "related_applications": [],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.roysenterprise.zenithoracle",
+      "id": "com.roysenterprise.zenithoracle"
+    }
+  ],
+  "scope_extensions": [
+    {
+      "origin": "https://zenith-oracle.vercel.app"
+    }
+  ],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "text/plain": [".txt"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+zenithoracle",
+      "url": "/?q=%s"
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Daily Oracle",
+      "description": "Today's cosmic energy forecast at a glance",
+      "tag": "daily-oracle",
+      "ms_ac_template": "widget/daily-oracle",
+      "screenshots": [
+        {
+          "src": "/assets/screenshot_daily.jpg",
+          "sizes": "412x915",
+          "label": "Daily Oracle Widget"
+        }
+      ]
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "/tarot"
+  },
   "icons": [
     {
       "src": "/assets/zenith-oracle-logo.png",
@@ -129,12 +189,5 @@
       "description": "Check zodiac compatibility with your partner",
       "icons": [{"src": "/assets/zenith-oracle-logo.png", "sizes": "512x512"}]
     }
-  ],
-  "handle_links": "preferred",
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "edge_side_panel": {
-    "preferred_width": 400
-  }
+  ]
 }

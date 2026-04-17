@@ -198,6 +198,29 @@ self.addEventListener('sync', (event) => {
   }
 });
 
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'update-daily-oracle') {
+    event.waitUntil(updateDailyOracle());
+  }
+});
+
+async function updateDailyOracle() {
+  try {
+    const response = await fetch('/api/daily-oracle');
+    if (response && response.ok) {
+      const cache = await caches.open(API_CACHE);
+      const headers = new Headers(response.headers);
+      headers.set('sw-cache-time', Date.now().toString());
+      const cachedResponse = new Response(await response.clone().blob(), {
+        status: response.status,
+        statusText: response.statusText,
+        headers: headers,
+      });
+      await cache.put('/api/daily-oracle', cachedResponse);
+    }
+  } catch (e) {}
+}
+
 async function syncPendingReadings() {
   try {
     const cache = await caches.open('zenith-pending-sync');
