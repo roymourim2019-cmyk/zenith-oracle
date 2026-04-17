@@ -15,7 +15,13 @@
       "src": "./assets/zenith-oracle-logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/zenith-oracle-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "./icon-192.png",
@@ -32,11 +38,60 @@
   ],
   "screenshots": [
     {
-      "src": "./assets/screenshot1.png",
-      "sizes": "1080x1920",
+      "src": "./assets/screenshot_home.png",
+      "sizes": "412x915",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Daily horoscope with real Swiss Ephemeris planetary transits"
+      "label": "Home — Personalized cosmic greeting with daily streak and live transit ticker"
+    },
+    {
+      "src": "./assets/screenshot_daily.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Daily Oracle — Today's energy forecast with real Swiss Ephemeris transits"
+    },
+    {
+      "src": "./assets/screenshot_tarot.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tarot Oracle — 122 cards, 5 reading types personalized by birth chart"
+    },
+    {
+      "src": "./assets/screenshot_vedic.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vedic Zenith — Sidereal birth chart with Dasha and Pancha-Pakshi Oracle"
+    },
+    {
+      "src": "./assets/screenshot_compat.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Compatibility Checker — Cross-system partner match using Moon, Dasha and Chinese zodiac"
+    },
+    {
+      "src": "./assets/screenshot_matrix.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Sovereign Matrix — 11 modules of cosmic intelligence, all free"
+    },
+    {
+      "src": "./assets/screenshot_warroom.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "War Room — 5 strategy games forged from Swiss Ephemeris precision"
+    },
+    {
+      "src": "./assets/screenshot_numerology.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Numerology Vault — Chaldean, Pythagorean and Vedic triple-system analysis"
     }
   ],
   "categories": ["lifestyle", "entertainment", "education"],
