@@ -2,7 +2,7 @@
   "name": "Zenith Oracle - Cosmic Intelligence",
   "short_name": "Zenith Oracle",
   "id": "/",
-  "description": "Scripture-Bound Deterministic Math. 100% Free. Vedic, Western, Chinese Astrology, Numerology, Tarot & 5 Strategy Games powered by Swiss Ephemeris. Roy's Enterprise.",
+  "description": "Free astrology app with 100% scientific accuracy. Get your Vedic birth chart, Western horoscope, Chinese zodiac, Tarot readings, Numerology analysis and daily cosmic forecasts powered by Swiss Ephemeris (NASA JPL). Daily oracle, compatibility checker, 5 strategy games and AI-powered cosmic briefings.",
   "start_url": "./",
   "scope": "/",
   "display_override": ["window-controls-overlay"],
@@ -36,11 +36,43 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Zenith Oracle — Daily Oracle with real Swiss Ephemeris transits"
+      "label": "Daily horoscope with real Swiss Ephemeris planetary transits"
     }
   ],
   "categories": ["lifestyle", "entertainment", "education"],
   "lang": "en",
   "dir": "ltr",
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Daily Oracle",
+      "short_name": "Daily",
+      "url": "/daily",
+      "description": "Today's cosmic energy forecast and card of the day",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Tarot Reading",
+      "short_name": "Tarot",
+      "url": "/tarot",
+      "description": "Get a personalized tarot card reading",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Vedic Birth Chart",
+      "short_name": "Vedic",
+      "url": "/vedic",
+      "description": "Calculate your Vedic sidereal birth chart",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Compatibility",
+      "short_name": "Match",
+      "url": "/compatibility",
+      "description": "Check zodiac compatibility with your partner",
+      "icons": [{"src": "./assets/zenith-oracle-logo.png", "sizes": "512x512"}]
+    }
+  ]
 }
