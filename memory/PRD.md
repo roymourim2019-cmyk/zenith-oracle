@@ -88,7 +88,5 @@
 - [x] PWA compliance (manifest, icons, screenshots, pwabuilder-sw.js)
 
 ## Remaining Backlog
-- [ ] Real VAPID keys for production push notifications
 - [ ] Real AdMob SDK when deploying via Capacitor/TWA
-- [ ] Server-side push notification scheduler (daily cron)
-- [ ] Cron job for daily push notification dispatch at 7AM user-local time
+- [ ] App Store listing optimization (ASO keywords for Western markets)
